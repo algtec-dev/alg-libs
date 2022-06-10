@@ -104,6 +104,10 @@ export default {
     baseUrl: String,
   },
   async created() {
+    // criar a variavel no css
+    var r = document.querySelector(":root");
+    r.style.setProperty("--v-primary-base", this.$primaryColor);
+
     this.data.forEach((el) => {
       if (el.showInTable)
         this.headers.push({
@@ -168,6 +172,13 @@ export default {
   },
 };
 </script>
+
+<style>
+.primary--background {
+  background-color: var(--v-primary-base) !important;
+  color: white;
+}
+</style>
 
 <style scoped>
 /* media query MD */

@@ -187,7 +187,7 @@ export default {
 </script>
 
 <style>
-/* .v-input--is-readonly > .v-input__control > .v-input__slot:before {
+.v-input--is-readonly > .v-input__control > .v-input__slot:before {
   border-style: none !important;
 }
 
@@ -196,10 +196,5 @@ export default {
 }
 .v-input--is-readonly label.v-label.v-label--active {
   color: var(--v-primary-base) !important;
-} */
-
-/* .primary--background {
-  background-color: #01814b !important;
-  color: white;
-} */
+}
 </style>
