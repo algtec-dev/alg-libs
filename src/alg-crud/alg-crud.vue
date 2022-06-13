@@ -81,7 +81,6 @@
       :headers="data"
       :title="name"
       :route="route"
-      :baseUrl="baseUrl"
       @close-dialog="closeCrudDialog"
       @close-get-data="closeGetData"
     />
@@ -101,7 +100,6 @@ export default {
     name: String,
     route: String,
     data: Array,
-    baseUrl: String,
   },
   async created() {
     // criar a variavel no css
@@ -152,7 +150,7 @@ export default {
     async getData() {
       this.isLoading = true;
 
-      var response = await axios.get(this.baseUrl + this.route);
+      var response = await axios.get(this.$baseUrl + this.route);
       this.items = response.data.data;
 
       this.isLoading = false;

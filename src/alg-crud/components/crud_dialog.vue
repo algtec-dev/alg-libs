@@ -95,7 +95,6 @@ export default {
     headers: Array,
     title: String,
     route: String,
-    baseUrl: String,
   },
   created() {
     console.log(this.data);
@@ -123,11 +122,8 @@ export default {
     async createItem() {
       var errors;
 
-      console.log(this.baseUrl);
-      console.log(this.route);
-
       await axios
-        .post(this.baseUrl + this.route, this.item)
+        .post(this.$baseUrl + this.route, this.item)
         .catch(function (error) {
           errors = error.response.data.errors;
         });
@@ -148,7 +144,7 @@ export default {
       var errors;
 
       await axios
-        .patch(this.baseUrl + this.route + "/" + this.item._id, this.item)
+        .patch(this.$baseUrl + this.route + "/" + this.item._id, this.item)
         .catch(function (error) {
           errors = error.response.data.errors;
         });
@@ -165,7 +161,7 @@ export default {
       var errors;
 
       await axios
-        .delete(this.baseUrl + this.route + "/" + this.item._id)
+        .delete(this.$baseUrl + this.route + "/" + this.item._id)
         .catch(function (error) {
           errors = error.response.data.errors;
         });
