@@ -79,7 +79,6 @@
       :crudDialogState="crudDialogState"
       :data="item"
       :headers="data"
-      :title="name"
       :route="route"
       @close-dialog="closeCrudDialog"
       @close-get-data="closeGetData"
@@ -89,8 +88,6 @@
 
 <script>
 import CrudDialog from "./components/crud_dialog.vue";
-// import axios from "axios";
-
 import http from "@/plugins/axios.js";
 
 export default {
@@ -99,15 +96,11 @@ export default {
     CrudDialog,
   },
   props: {
-    name: String,
     route: String,
     data: Array,
   },
   async created() {
-    // criar a variavel primary no css
-
     // popula o header da tabela
-
     this.data.forEach((el) => {
       if (el.showInTable)
         this.headers.push({
@@ -119,7 +112,7 @@ export default {
     await this.getData();
   },
   mounted() {
-    this.setTableHeight();
+    this.availableHeight = this.getTableHeight();
   },
   data() {
     return {
@@ -133,26 +126,8 @@ export default {
     };
   },
   methods: {
-    setTableHeight() {
-      var fineAdjust = 20;
-      var main = document
-        .getElementsByClassName("v-main__wrap")[0]
-        .getBoundingClientRect().height;
-      var toolbar = document
-        .getElementById("table-options")
-        .getBoundingClientRect().height;
-      var header = document
-        .getElementsByTagName("thead")[0]
-        .getBoundingClientRect().height;
-      var footer = document
-        .getElementsByClassName("v-data-footer")[0]
-        .getBoundingClientRect().height;
-      this.availableHeight = main - toolbar - header - footer + fineAdjust;
-    },
     async getData() {
       this.isLoading = true;
-
-      http;
 
       var response = await http.get(this.route);
       this.items = response.data.data;
@@ -170,6 +145,24 @@ export default {
     closeCrudDialog() {
       this.item = null;
       this.crudDialogState = false;
+    },
+    getTableHeight() {
+      // calcula a altura disponivel para a tabela
+      var fineAdjust = 20;
+      var main = document
+        .getElementsByClassName("v-main__wrap")[0]
+        .getBoundingClientRect().height;
+      var toolbar = document
+        .getElementById("table-options")
+        .getBoundingClientRect().height;
+      var header = document
+        .getElementsByTagName("thead")[0]
+        .getBoundingClientRect().height;
+      var footer = document
+        .getElementsByClassName("v-data-footer")[0]
+        .getBoundingClientRect().height;
+
+      return main - toolbar - header - footer + fineAdjust;
     },
   },
 };

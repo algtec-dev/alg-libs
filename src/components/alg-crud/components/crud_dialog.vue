@@ -13,7 +13,7 @@
         <span v-if="!this.data">Adicionar</span>
         <span v-if="this.data && !isEditing">Visualizar</span>
         <span v-if="this.data && isEditing">Editar</span>
-        <span class="ml-1">{{ title }}</span>
+        <span class="ml-1">{{ $router.currentRoute.name }}</span>
       </v-card-title>
 
       <v-card-text class="pa-3">
@@ -93,11 +93,9 @@ export default {
     crudDialogState: Boolean,
     data: Object,
     headers: Array,
-    title: String,
     route: String,
   },
   created() {
-    console.log(this.data);
     if (this.data) {
       this.item = JSON.parse(JSON.stringify(this.data)); //pra perder o vinculo da variavel
     }
