@@ -22,7 +22,7 @@ npm install https://github.com/algtec-dev/alg-libs
 Em seu arquivo main.js
 
 ```sh
-import AlgCrud from "alglibs";
+import AlgLibs from "alglibs";
 
 Vue.use(AlgLibs, {
   color: '#01814B', //css colors
