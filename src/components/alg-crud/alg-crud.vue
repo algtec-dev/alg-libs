@@ -26,7 +26,7 @@
           ></v-text-field>
           <v-divider class="hidden-md-and-up"></v-divider>
         </v-col>
-
+        <!-- action button -->
         <v-col cols="12" md="5">
           <v-item-group class="text-center text-md-right">
             <v-btn tile depressed height="40">
@@ -89,7 +89,9 @@
 
 <script>
 import CrudDialog from "./components/crud_dialog.vue";
-import axios from "axios";
+// import axios from "axios";
+
+import http from "@/plugins/axios.js";
 
 export default {
   name: "AlgCrud",
@@ -102,9 +104,9 @@ export default {
     data: Array,
   },
   async created() {
-    // criar a variavel no css
-    var r = document.querySelector(":root");
-    r.style.setProperty("--v-primary-base", this.$primaryColor);
+    // criar a variavel primary no css
+
+    // popula o header da tabela
 
     this.data.forEach((el) => {
       if (el.showInTable)
@@ -150,7 +152,9 @@ export default {
     async getData() {
       this.isLoading = true;
 
-      var response = await axios.get(this.$baseUrl + this.route);
+      http;
+
+      var response = await http.get(this.route);
       this.items = response.data.data;
 
       this.isLoading = false;

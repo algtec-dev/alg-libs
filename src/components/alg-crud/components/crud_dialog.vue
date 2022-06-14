@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import http from "@/plugins/axios.js";
 
 export default {
   props: {
@@ -122,11 +122,9 @@ export default {
     async createItem() {
       var errors;
 
-      await axios
-        .post(this.$baseUrl + this.route, this.item)
-        .catch(function (error) {
-          errors = error.response.data.errors;
-        });
+      await http.post(this.route, this.item).catch(function (error) {
+        errors = error.response.data.errors;
+      });
 
       if (!errors) {
         // this.$root.vtoast.show({ message: "Item Adicionado" });
@@ -143,8 +141,8 @@ export default {
 
       var errors;
 
-      await axios
-        .patch(this.$baseUrl + this.route + "/" + this.item._id, this.item)
+      await http
+        .patch(this.route + "/" + this.item._id, this.item)
         .catch(function (error) {
           errors = error.response.data.errors;
         });
@@ -160,8 +158,8 @@ export default {
       this.isLoading = true;
       var errors;
 
-      await axios
-        .delete(this.$baseUrl + this.route + "/" + this.item._id)
+      await http
+        .delete(this.route + "/" + this.item._id)
         .catch(function (error) {
           errors = error.response.data.errors;
         });
