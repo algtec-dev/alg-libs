@@ -61,6 +61,7 @@
       <v-divider></v-divider>
       <!-- table -->
       <v-data-table
+        class="stripped-table"
         fixed-header
         :height="availableHeight + 'px'"
         :loading="isLoading"
@@ -172,6 +173,9 @@ export default {
 .primary--background {
   background-color: var(--v-primary-base) !important;
   color: white;
+}
+.stripped-table tbody tr:nth-of-type(odd) {
+  background-color: #fafafa;
 }
 </style>
 

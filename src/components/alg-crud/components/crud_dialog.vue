@@ -28,6 +28,7 @@
                 :key="el.key"
               >
                 <v-text-field
+                  v-if="el.type == 'text' || el.type == 'number'"
                   v-model="item[el.key]"
                   :type="el.type"
                   :label="el.value"
@@ -36,6 +37,12 @@
                   :readonly="isLoading || (data && !isEditing)"
                   validate-on-blur
                 ></v-text-field>
+                <DatePicker
+                  v-if="el.type == 'date'"
+                  v-model="item[el.key]"
+                  :title="el.value"
+                  :disable="isLoading || (data && !isEditing)"
+                />
               </v-col>
             </v-row>
           </v-form>
@@ -87,6 +94,7 @@
 
 <script>
 import http from "@/plugins/axios.js";
+import DatePicker from "./date_picker.vue";
 
 export default {
   props: {
@@ -94,6 +102,9 @@ export default {
     data: Object,
     headers: Array,
     route: String,
+  },
+  components: {
+    DatePicker,
   },
   created() {
     if (this.data) {
