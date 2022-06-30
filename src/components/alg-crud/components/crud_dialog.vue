@@ -32,8 +32,13 @@
                   v-model="item[el.key]"
                   :type="el.type"
                   :label="el.value"
+                  v-mask="el.mask"
                   required
-                  :rules="[(v) => !!v || 'Campo Obrigatório']"
+                  :rules="
+                    el.rules != undefined
+                      ? el.rules
+                      : [(v) => !!v || 'Campo Obrigatório']
+                  "
                   :readonly="isLoading || (data && !isEditing)"
                   validate-on-blur
                 ></v-text-field>
@@ -139,6 +144,7 @@ export default {
         // this.$root.vtoast.show({ message: "Item Adicionado" });
         this.closeDialog(true);
       } else {
+        console.log(errors);
         // this.$root.vtoast.show({ message: errors[0], color: "error" });
       }
     },
@@ -158,8 +164,10 @@ export default {
 
       if (!errors) {
         // this.$root.vtoast.show({ message: "Dados Alterados" });
+
         this.closeDialog(true);
       } else {
+        console.log(errors);
         // this.$root.vtoast.show({ message: errors[0], color: "error" });
       }
     },
