@@ -48,6 +48,23 @@
                   :title="el.value"
                   :disable="isLoading || (data && !isEditing)"
                 />
+                <v-autocomplete
+                  v-if="el.type == 'select'"
+                  v-model="item[el.key]"
+                  :label="el.value"
+                  v-mask="el.mask"
+                  :items="el.options"
+                  item-text="text"
+                  item-value="value"
+                  required
+                  :rules="
+                    el.rules != undefined
+                      ? el.rules
+                      : [(v) => !!v || 'Campo Obrigatório']
+                  "
+                  :readonly="isLoading || (data && !isEditing)"
+                  validate-on-blur
+                ></v-autocomplete>
               </v-col>
             </v-row>
           </v-form>
