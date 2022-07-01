@@ -158,11 +158,13 @@ export default {
       });
 
       if (!errors) {
-        // this.$root.vtoast.show({ message: "Item Adicionado" });
+        this.$root.notify.showSuccessToast("Item Adicionado");
         this.closeDialog(true);
       } else {
         console.log(errors);
-        // this.$root.vtoast.show({ message: errors[0], color: "error" });
+        errors.forEach((element) => {
+          this.$root.notify.showErrorToast(element);
+        });
       }
     },
     async updateItem() {
@@ -180,12 +182,13 @@ export default {
         });
 
       if (!errors) {
-        // this.$root.vtoast.show({ message: "Dados Alterados" });
-
+        this.$root.notify.showSuccessToast("Dados Alterados");
         this.closeDialog(true);
       } else {
         console.log(errors);
-        // this.$root.vtoast.show({ message: errors[0], color: "error" });
+        errors.forEach((element) => {
+          this.$root.notify.showErrorToast(element);
+        });
       }
     },
     async deleteItem() {
@@ -199,10 +202,14 @@ export default {
         });
 
       if (!errors) {
-        // this.$root.vtoast.show({ message: "Item excluído" });
+        this.$root.notify.showSuccessToast("Item excluído");
+
         this.closeDialog(true);
       } else {
-        // this.$root.vtoast.show({ message: errors[0], color: "error" });
+        console.log(errors);
+        errors.forEach((element) => {
+          this.$root.notify.showErrorToast(element);
+        });
         this.isLoading = false;
       }
     },
