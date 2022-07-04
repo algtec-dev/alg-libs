@@ -16,7 +16,7 @@
         <span class="ml-1">{{ $router.currentRoute.name }}</span>
       </v-card-title>
 
-      <v-card-text class="pa-3">
+      <v-card-text class="pa-3 overflow-y-auto" style="max-height: 60vh">
         <v-container>
           <v-form ref="form">
             <v-row>
@@ -67,6 +67,13 @@
                 ></v-autocomplete>
               </v-col>
             </v-row>
+            <slot
+              name="dialog"
+              v-bind:isEditing="isEditing"
+              v-bind:isLoading="isLoading"
+              v-bind:isNew="isNew"
+              v-bind:item="item"
+            ></slot>
           </v-form>
         </v-container>
       </v-card-text>
@@ -101,7 +108,7 @@
           Fechar
         </v-btn>
         <v-btn
-          v-if="isEditing || !this.data"
+          v-if="isEditing || !data"
           color="primary"
           depressed
           :loading="isLoading"
@@ -131,9 +138,12 @@ export default {
   created() {
     if (this.data) {
       this.item = JSON.parse(JSON.stringify(this.data)); //pra perder o vinculo da variavel
+    } else {
+      this.isNew = true;
     }
   },
   data: () => ({
+    isNew: false,
     item: {},
     isEditing: false,
     isLoading: false,

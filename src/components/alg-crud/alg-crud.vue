@@ -83,7 +83,11 @@
       :route="route"
       @close-dialog="closeCrudDialog"
       @close-get-data="closeGetData"
-    />
+    >
+      <template v-slot:dialog="props">
+        <slot name="dialog" v-bind:data="props"> </slot>
+      </template>
+    </CrudDialog>
   </v-container>
 </template>
 
