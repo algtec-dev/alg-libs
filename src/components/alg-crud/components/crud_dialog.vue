@@ -18,7 +18,6 @@
 
       <v-card-text class="pa-3 overflow-y-auto" style="max-height: 60vh">
         <v-container>
-          {{ item }}
           <v-form ref="form">
             <v-row>
               <v-col
