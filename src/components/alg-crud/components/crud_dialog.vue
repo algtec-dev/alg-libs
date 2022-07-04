@@ -18,6 +18,7 @@
 
       <v-card-text class="pa-3 overflow-y-auto" style="max-height: 60vh">
         <v-container>
+          {{ item }}
           <v-form ref="form">
             <v-row>
               <v-col
@@ -48,6 +49,20 @@
                   :title="el.value"
                   :disable="isLoading || (data && !isEditing)"
                 />
+                <AlgIconPicker
+                  v-if="el.type == 'icon'"
+                  v-model="item[el.key]"
+                  :label="el.value"
+                  hide-details
+                  required
+                  :rules="
+                    el.rules != undefined
+                      ? el.rules
+                      : [(v) => !!v || 'Campo Obrigatório']
+                  "
+                  :readonly="isLoading || (data && !isEditing)"
+                  validate-on-blur
+                ></AlgIconPicker>
                 <v-autocomplete
                   v-if="el.type == 'select'"
                   v-model="item[el.key]"
@@ -124,6 +139,7 @@
 <script>
 import http from "@/plugins/axios.js";
 import DatePicker from "./date_picker.vue";
+import AlgIconPicker from "../../alg-icon-picker/icon-picker.vue";
 
 export default {
   props: {
@@ -134,6 +150,7 @@ export default {
   },
   components: {
     DatePicker,
+    AlgIconPicker,
   },
   created() {
     if (this.data) {
