@@ -139,6 +139,13 @@ export default {
     if (this.data) {
       this.item = JSON.parse(JSON.stringify(this.data)); //pra perder o vinculo da variavel
     } else {
+      let temp = {};
+
+      this.headers.forEach((element) => {
+        if (element.default) temp[element.key] = element.value;
+      });
+
+      this.item = JSON.parse(JSON.stringify(temp));
       this.isNew = true;
     }
   },
