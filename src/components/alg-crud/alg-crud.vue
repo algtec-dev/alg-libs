@@ -68,8 +68,10 @@
         :search="search"
         :headers="headers"
         :items="items"
+        :options.sync="options"
+        :server-items-length="totalItens"
         :footer-props="{
-          'items-per-page-options': [15],
+          'items-per-page-options': [perPage],
         }"
         @click:row="showCrudDialog($event)"
       >
@@ -118,9 +120,21 @@ export default {
   },
   mounted() {
     this.availableHeight = this.getTableHeight();
+    if (this.availableHeight > 640) this.perPage = 15;
+  },
+  watch: {
+    options: {
+      handler() {
+        this.getData();
+      },
+      deep: true,
+    },
   },
   data() {
     return {
+      totalItens: 0,
+      perPage: 10,
+      options: {},
       item: null,
       availableHeight: 0,
       search: "",
@@ -133,8 +147,18 @@ export default {
   methods: {
     async getData() {
       this.isLoading = true;
+      const { sortBy, sortDesc, page, itemsPerPage } = this.options;
 
-      var response = await http.get(this.route);
+      let query = {
+        params: {
+          $limit: itemsPerPage,
+          $skip: (page - 1) * itemsPerPage,
+        },
+      };
+
+      var response = await http.get(this.route, query);
+
+      this.totalItens = response.data.total;
       this.items = response.data.data;
 
       this.isLoading = false;
