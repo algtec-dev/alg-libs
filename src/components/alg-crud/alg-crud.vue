@@ -35,6 +35,7 @@
             </v-btn>
 
             <v-btn
+              v-permission="'CREATE'"
               tile
               depressed
               height="40"

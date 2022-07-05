@@ -95,6 +95,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
+          v-permission="'DELETE'"
           v-if="this.data && !isEditing"
           color="error"
           depressed
@@ -105,6 +106,7 @@
         </v-btn>
 
         <v-btn
+          v-permission="'UPDATE'"
           v-if="this.data && !isEditing"
           color="secondary"
           depressed
