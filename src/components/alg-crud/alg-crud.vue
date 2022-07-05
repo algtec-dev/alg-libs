@@ -29,7 +29,7 @@
         <!-- action button -->
         <v-col cols="12" md="5">
           <v-item-group class="text-center text-md-right">
-            <v-btn tile depressed height="40">
+            <v-btn tile depressed height="40" @click="exportItems()">
               <v-icon dense left> mdi-printer </v-icon>
               <span class="caption">Exportar</span>
             </v-btn>
@@ -163,6 +163,49 @@ export default {
 
       this.isLoading = false;
     },
+    async exportItems() {
+      var toExport = [];
+      var response = await http.get(this.route, {
+        params: {
+          $limit: this.totalItens,
+        },
+      });
+
+      response.data.data.forEach((item) => {
+        let temp = {};
+        this.data.forEach((element) => {
+          var maintain = Object.keys(item).includes(element.key);
+          if (maintain) {
+            temp[element.key] = item[element.key];
+          }
+        });
+        toExport.push(temp);
+      });
+
+      let filename = this.$router.currentRoute.name + ".csv";
+      var data = [];
+      var rows = toExport;
+      data.push(Object.keys(rows[0]).join(";"));
+      for (var i = 0; i < rows.length; i++) {
+        var row = [],
+          cols = rows[i];
+        let values = Object.values(cols);
+        for (var j = 0; j < values.length; j++) {
+          row.push(values[j]);
+        }
+        data.push(row.join(";"));
+      }
+      var csv_file, download_link;
+      csv_file = new Blob(["\ufeff", data.join("\n")], {
+        type: "text/csv",
+      });
+      download_link = document.createElement("a");
+      download_link.download = filename;
+      download_link.href = window.URL.createObjectURL(csv_file);
+      download_link.style.display = "none";
+      document.body.appendChild(download_link);
+      download_link.click();
+    },
     showCrudDialog(e) {
       if (e) this.item = e;
       this.crudDialogState = true;
@@ -204,6 +247,10 @@ export default {
 }
 .stripped-table tbody tr:nth-of-type(odd) {
   background-color: #fafafa;
+}
+.pointer:hover {
+  background: lightgrey;
+  cursor: pointer;
 }
 </style>
 
