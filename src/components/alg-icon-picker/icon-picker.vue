@@ -23,6 +23,9 @@ export default {
   props: {
     value: String,
   },
+  created() {
+    this.selectedIcon = this.value;
+  },
   data: () => ({
     icons,
     selectedIcon: null,
