@@ -187,17 +187,15 @@ export default {
       var errors;
 
       await http.post(this.route, this.item).catch(function (error) {
-        errors = error.response.data.errors;
+        console.log(error);
+        errors = true;
       });
 
       if (!errors) {
         this.$root.notify.showSuccessToast("Item Adicionado");
         this.closeDialog(true);
       } else {
-        console.log(errors);
-        errors.forEach((element) => {
-          this.$root.notify.showErrorToast(element);
-        });
+        this.$root.notify.showErrorToast("Erro");
       }
     },
     async updateItem() {
@@ -211,17 +209,15 @@ export default {
       await http
         .patch(this.route + "/" + this.item._id, this.item)
         .catch(function (error) {
-          errors = error.response.data.errors;
+          console.log(error);
+          errors = true;
         });
 
       if (!errors) {
         this.$root.notify.showSuccessToast("Dados Alterados");
         this.closeDialog(true);
       } else {
-        console.log(errors);
-        errors.forEach((element) => {
-          this.$root.notify.showErrorToast(element);
-        });
+        this.$root.notify.showErrorToast("Erro");
       }
     },
     async deleteItem() {
@@ -231,7 +227,8 @@ export default {
       await http
         .delete(this.route + "/" + this.item._id)
         .catch(function (error) {
-          errors = error.response.data.errors;
+          console.log(error);
+          errors = true;
         });
 
       if (!errors) {
@@ -239,10 +236,7 @@ export default {
 
         this.closeDialog(true);
       } else {
-        console.log(errors);
-        errors.forEach((element) => {
-          this.$root.notify.showErrorToast(element);
-        });
+        this.$root.notify.showErrorToast("Erro");
         this.isLoading = false;
       }
     },
