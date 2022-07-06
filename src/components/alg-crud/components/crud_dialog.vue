@@ -70,6 +70,7 @@
                   :items="el.options"
                   item-text="text"
                   item-value="value"
+                  :multiple="el.multiple"
                   required
                   :rules="
                     el.rules != undefined
@@ -79,6 +80,19 @@
                   :readonly="isLoading || (data && !isEditing)"
                   validate-on-blur
                 ></v-autocomplete>
+                <span
+                  v-if="el.type == 'boolean'"
+                  class="primary--text text-caption"
+                  v-text="el.value"
+                />
+                <v-switch
+                  class="mt-0"
+                  dense
+                  v-if="el.type == 'boolean'"
+                  v-model="item[el.key]"
+                  hide-details
+                  :readonly="isLoading || (data && !isEditing)"
+                ></v-switch>
               </v-col>
             </v-row>
             <slot
