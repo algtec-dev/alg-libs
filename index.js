@@ -5,6 +5,7 @@ import AlgIconPicker from './src/components/alg-icon-picker/icon-picker.vue'
 
 
 import { VueMaskDirective } from 'v-mask'
+import DatetimePicker from 'vuetify-datetime-picker'
 
 
 function install(Vue, options = {}) {
@@ -22,6 +23,8 @@ function install(Vue, options = {}) {
                 vnode.elm.style.display = "none";
         }
     })
+
+    Vue.use(DatetimePicker)
 
     Vue.directive('mask', VueMaskDirective);
 

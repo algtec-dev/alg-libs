@@ -45,8 +45,22 @@
                 <DatePicker
                   v-if="el.type == 'date'"
                   v-model="item[el.key]"
+                  :type="el.type"
                   :title="el.value"
                   :disable="isLoading || (data && !isEditing)"
+                />
+                <DateTimePicker
+                  v-if="el.type == 'timestamp'"
+                  v-model="item[el.key]"
+                  :type="el.type"
+                  :label="el.value"
+                  :disabled="isLoading || (data && !isEditing)"
+                  :rules="
+                    el.rules != undefined
+                      ? el.rules
+                      : [(v) => !!v || 'Campo Obrigatório']
+                  "
+                  validate-on-blur
                 />
                 <AlgIconPicker
                   v-if="el.type == 'icon'"
@@ -154,6 +168,8 @@
 <script>
 import http from "@/plugins/axios.js";
 import DatePicker from "./date_picker.vue";
+import DateTimePicker from "./datetime_picker.vue";
+
 import AlgIconPicker from "../../alg-icon-picker/icon-picker.vue";
 
 export default {
@@ -166,6 +182,7 @@ export default {
   components: {
     DatePicker,
     AlgIconPicker,
+    DateTimePicker,
   },
   created() {
     if (this.data) {
