@@ -114,14 +114,13 @@ export default {
         this.headers.push({
           text: el.value,
           value: el.key,
-          sortable: false,
+          sortable: true,
         });
     });
-    await this.getData();
+    // await this.getData();
   },
   mounted() {
     this.availableHeight = this.getTableHeight();
-    if (this.availableHeight > 640) this.perPage = 15;
   },
   watch: {
     options: {
@@ -134,7 +133,7 @@ export default {
   data() {
     return {
       totalItens: 0,
-      perPage: 10,
+      perPage: window.innerHeight > 800 ? 15 : 10,
       options: {},
       item: null,
       availableHeight: 0,
@@ -150,6 +149,22 @@ export default {
       this.isLoading = true;
       const { sortBy, sortDesc, page, itemsPerPage } = this.options;
 
+      function serialize(params) {
+        const qs = Object.keys(params)
+          .map((key) => `${key}=${params[key]}`)
+          .join("&");
+
+        let sortString = "&";
+
+        if (sortBy.length > 0) {
+          for (const key in sortBy) {
+            sortString += `$sort[${sortBy[key]}]=${sortDesc[key] ? 1 : -1}`;
+          }
+        }
+
+        return qs + sortString;
+      }
+
       let query = {
         params: {
           $limit: itemsPerPage,
@@ -157,7 +172,13 @@ export default {
         },
       };
 
-      var response = await http.get(this.route, query);
+      var response = await http.get(this.route, {
+        params: query.params,
+        paramsSerializer: (params) => {
+          return serialize(params);
+        },
+      });
+      // console.log(decodeURI(response.request.responseURL));
 
       this.totalItens = response.data.total;
       this.items = response.data.data;
@@ -168,11 +189,11 @@ export default {
       var toExport = [];
       var response = await http.get(this.route, {
         params: {
-          $limit: this.totalItens,
+          $paginate: false,
         },
       });
 
-      response.data.data.forEach((item) => {
+      response.data.forEach((item) => {
         let temp = {};
         this.data.forEach((element) => {
           var maintain = Object.keys(item).includes(element.key);
