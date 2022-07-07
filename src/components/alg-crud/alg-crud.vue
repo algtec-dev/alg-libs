@@ -243,8 +243,10 @@ export default {
     getTableHeight() {
       // calcula a altura disponivel para a tabela
       var fineAdjust = 20;
-      var main = document
-        .getElementsByClassName("v-main__wrap")[0]
+      var main = window.innerHeight;
+
+      var appbar = document
+        .getElementsByTagName("header")[0]
         .getBoundingClientRect().height;
       var toolbar = document
         .getElementById("table-options")
@@ -256,7 +258,7 @@ export default {
         .getElementsByClassName("v-data-footer")[0]
         .getBoundingClientRect().height;
 
-      return main - toolbar - header - footer + fineAdjust;
+      return main - appbar - toolbar - header - footer + fineAdjust;
     },
   },
 };
