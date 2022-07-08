@@ -17,7 +17,7 @@
           <v-text-field
             placeholder="Pesquisar"
             prepend-inner-icon="mdi-magnify"
-            v-model="search"
+            v-model="busca"
             flat
             solo
             dense
@@ -66,13 +66,18 @@
         fixed-header
         :height="availableHeight + 'px'"
         :loading="isLoading"
-        :search="search"
+        :search="busca"
         :headers="headers"
         :items="items"
         :options.sync="options"
         :server-items-length="totalItens"
+        :sort-desc="null"
+        :multi-sort="true"
         :footer-props="{
           'items-per-page-options': [perPage],
+        }"
+        :header-props="{
+          'sort-icon': 'mdi-arrow-down',
         }"
         @click:row="showCrudDialog($event)"
       >
@@ -129,15 +134,20 @@ export default {
       },
       deep: true,
     },
+    busca: function (val) {
+      console.log(this.buscaController);
+      this.getData();
+    },
   },
   data() {
     return {
+      buscaController: null,
       totalItens: 0,
       perPage: window.innerHeight > 800 ? 15 : 10,
       options: {},
       item: null,
       availableHeight: 0,
-      search: "",
+      busca: null,
       crudDialogState: false,
       isLoading: false,
       headers: [],
@@ -148,6 +158,7 @@ export default {
     async getData() {
       this.isLoading = true;
       const { sortBy, sortDesc, page, itemsPerPage } = this.options;
+      this.buscaController = new AbortController();
 
       function serialize(params) {
         const qs = Object.keys(params)
@@ -158,7 +169,7 @@ export default {
 
         if (sortBy.length > 0) {
           for (const key in sortBy) {
-            sortString += `$sort[${sortBy[key]}]=${sortDesc[key] ? 1 : -1}`;
+            sortString += `$sort[${sortBy[key]}]=${sortDesc[key] ? -1 : 1}&`;
           }
         }
 
@@ -172,12 +183,26 @@ export default {
         },
       };
 
-      var response = await http.get(this.route, {
-        params: query.params,
-        paramsSerializer: (params) => {
-          return serialize(params);
-        },
-      });
+      if (this.busca) {
+        // controller.abort();
+
+        query.params.$search = this.busca;
+      }
+
+      var response;
+      await http
+        .get(this.route, {
+          params: query.params,
+          signal: this.buscaController.signal,
+
+          paramsSerializer: (params) => {
+            return serialize(params);
+          },
+        })
+        .then(function (data) {
+          console.log("bla");
+          response = data;
+        });
       // console.log(decodeURI(response.request.responseURL));
 
       this.totalItens = response.data.total;
