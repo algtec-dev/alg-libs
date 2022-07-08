@@ -135,6 +135,8 @@ export default {
       deep: true,
     },
     busca: function (val) {
+      this.options.page = 1;
+      this.abortSearch.abort();
       this.getData();
     },
   },
@@ -150,12 +152,15 @@ export default {
       isLoading: false,
       headers: [],
       items: [],
+      abortSearch: null,
     };
   },
   methods: {
     async getData() {
       this.isLoading = true;
       const { sortBy, sortDesc, page, itemsPerPage } = this.options;
+
+      this.abortSearch = new AbortController();
 
       function serialize(params) {
         const qs = Object.keys(params)
@@ -184,18 +189,23 @@ export default {
         query.params.$search = this.busca;
       }
 
-      var response = await http.get(this.route, {
-        params: query.params,
-        paramsSerializer: (params) => {
-          return serialize(params);
-        },
-      });
-      // console.log(decodeURI(response.request.responseURL));
+      try {
+        var response = await http.get(this.route, {
+          params: query.params,
+          signal: this.abortSearch.signal,
 
-      this.totalItens = response.data.total;
-      this.items = response.data.data;
+          paramsSerializer: (params) => {
+            return serialize(params);
+          },
+        });
+        // console.log(decodeURI(response.request.responseURL));
 
-      this.isLoading = false;
+        this.totalItens = response.data.total;
+        this.items = response.data.data;
+        this.isLoading = false;
+      } catch (error) {
+        // console.log(error);
+      }
     },
     async exportItems() {
       var toExport = [];
