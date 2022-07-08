@@ -135,13 +135,11 @@ export default {
       deep: true,
     },
     busca: function (val) {
-      console.log(this.buscaController);
       this.getData();
     },
   },
   data() {
     return {
-      buscaController: null,
       totalItens: 0,
       perPage: window.innerHeight > 800 ? 15 : 10,
       options: {},
@@ -158,7 +156,6 @@ export default {
     async getData() {
       this.isLoading = true;
       const { sortBy, sortDesc, page, itemsPerPage } = this.options;
-      this.buscaController = new AbortController();
 
       function serialize(params) {
         const qs = Object.keys(params)
@@ -184,25 +181,15 @@ export default {
       };
 
       if (this.busca) {
-        // controller.abort();
-
         query.params.$search = this.busca;
       }
 
-      var response;
-      await http
-        .get(this.route, {
-          params: query.params,
-          signal: this.buscaController.signal,
-
-          paramsSerializer: (params) => {
-            return serialize(params);
-          },
-        })
-        .then(function (data) {
-          console.log("bla");
-          response = data;
-        });
+      var response = await http.get(this.route, {
+        params: query.params,
+        paramsSerializer: (params) => {
+          return serialize(params);
+        },
+      });
       // console.log(decodeURI(response.request.responseURL));
 
       this.totalItens = response.data.total;
