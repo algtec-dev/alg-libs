@@ -19,6 +19,7 @@
       <v-card-text class="pa-3 overflow-y-auto" style="max-height: 60vh">
         <v-container>
           <v-form ref="form">
+            {{ item }}
             <v-row>
               <v-col
                 class="py-0"
@@ -107,6 +108,10 @@
                   hide-details
                   :readonly="isLoading || (data && !isEditing)"
                 ></v-switch>
+                <AddressInput
+                  v-if="el.type == 'address'"
+                  v-model="item"
+                ></AddressInput>
               </v-col>
             </v-row>
             <slot
@@ -171,6 +176,7 @@ import DatePicker from "./date_picker.vue";
 import DateTimePicker from "./datetime_picker.vue";
 
 import AlgIconPicker from "../../alg-icon-picker/icon-picker.vue";
+import AddressInput from "../../address-input/address-input.vue";
 
 export default {
   props: {
@@ -183,6 +189,7 @@ export default {
     DatePicker,
     AlgIconPicker,
     DateTimePicker,
+    AddressInput,
   },
   created() {
     if (this.data) {
