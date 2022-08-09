@@ -19,7 +19,7 @@
       <v-card-text class="pa-3 overflow-y-auto" style="max-height: 60vh">
         <v-container>
           <v-form ref="form">
-            {{ item }}
+            <!-- {{ item }} -->
             <v-row>
               <v-col
                 class="py-0"
@@ -111,6 +111,7 @@
                 <AddressInput
                   v-if="el.type == 'address'"
                   v-model="item"
+                  :readonly="isLoading || (data && !isEditing)"
                 ></AddressInput>
               </v-col>
             </v-row>
