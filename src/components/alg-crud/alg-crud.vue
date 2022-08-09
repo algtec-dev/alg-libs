@@ -61,6 +61,7 @@
       </v-row>
       <v-divider></v-divider>
       <!-- table -->
+      {{ items[0] }}
       <v-data-table
         class="stripped-table"
         fixed-header
@@ -81,6 +82,19 @@
         }"
         @click:row="showCrudDialog($event)"
       >
+        <!-- para itens que precisem de personalização -->
+        <template v-slot:[`item.icon`]="{ item }">
+          <v-icon>{{ item.icon }}</v-icon>
+        </template>
+        <template v-slot:[`item.date`]="{ item }">
+          <span>{{ new Date(item.date).toLocaleString() }}</span>
+        </template>
+        <template v-slot:[`item.createdAt`]="{ item }">
+          <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
+        </template>
+        <template v-slot:[`item.cellphone`]="{ item }">
+          <span>{{ maskedPhone(item.cellphone) }}</span>
+        </template>
       </v-data-table>
     </v-card>
     <CrudDialog
@@ -156,6 +170,15 @@ export default {
     };
   },
   methods: {
+    maskedPhone(x) {
+      let masked;
+      try {
+        masked = `(${x[0]}${x[1]}) ${x.substring(2, 7)}-${x.substring(7)}`;
+      } catch (error) {
+        masked = "";
+      }
+      return masked;
+    },
     async getData() {
       this.isLoading = true;
       const { sortBy, sortDesc, page, itemsPerPage } = this.options;
