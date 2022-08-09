@@ -84,6 +84,7 @@ export default {
   data: () => ({
     item: {},
     initialSearch: true,
+    isSearching: false,
     states: [
       { text: "Acre", value: "AC" },
       { text: "Alagoas", value: "AL" },
@@ -120,12 +121,15 @@ export default {
         this.initialSearch = false;
         return;
       }
+
+      if (this.isSearching) return;
+
       if (el.length == 9) {
+        this.isSearching = true;
         let response = await http({
           method: "GET",
           baseURL: `https://viacep.com.br/ws/${el}/json/`,
         });
-        console.log("search");
         if (!response.data.erro) {
           this.item.address = {
             cep: el,
@@ -135,6 +139,7 @@ export default {
             uf: response.data.uf,
           };
         }
+        this.isSearching = false;
       }
     },
   },
