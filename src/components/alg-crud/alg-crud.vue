@@ -61,7 +61,6 @@
       </v-row>
       <v-divider></v-divider>
       <!-- table -->
-      {{ items[0] }}
       <v-data-table
         class="stripped-table"
         fixed-header
