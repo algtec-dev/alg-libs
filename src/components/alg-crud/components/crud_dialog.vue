@@ -7,22 +7,24 @@
     :fullscreen="$vuetify.breakpoint.xsOnly"
   >
     <v-card class="flexcard">
-      <v-card-title class="text-h6 primary--background">
-        <v-icon dense left color="white">
-          {{ $router.currentRoute.meta.icon }}
-        </v-icon>
-        <span v-if="!this.data">Adicionar</span>
-        <span v-if="this.data && !isEditing">Visualizar</span>
-        <span v-if="this.data && isEditing">Editar</span>
-        <span class="ml-1">{{ $router.currentRoute.name }}</span>
-      </v-card-title>
+      <v-form ref="form" @submit.prevent="save">
+        <v-card-title class="text-h6 primary--background">
+          <v-icon dense left color="white">
+            {{ $router.currentRoute.meta.icon }}
+          </v-icon>
+          <span v-if="!this.data">Adicionar</span>
+          <span v-if="this.data && !isEditing">Visualizar</span>
+          <span v-if="this.data && isEditing">Editar</span>
+          <span class="ml-1">{{ $router.currentRoute.name }}</span>
+        </v-card-title>
 
-      <v-card-text
-        class="pa-3 overflow-y-auto grow"
-        :style="{ 'max-height': $vuetify.breakpoint.xsOnly ? '86vh' : '60vh' }"
-      >
-        <v-container>
-          <v-form ref="form">
+        <v-card-text
+          class="pa-3 overflow-y-auto grow"
+          :style="{
+            'max-height': $vuetify.breakpoint.xsOnly ? '86vh' : '60vh',
+          }"
+        >
+          <v-container>
             <!-- {{ item }} -->
             <v-row>
               <v-col
@@ -126,51 +128,51 @@
               v-bind:isNew="isNew"
               v-bind:item="item"
             ></slot>
-          </v-form>
-        </v-container>
-      </v-card-text>
+          </v-container>
+        </v-card-text>
 
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          v-permission="'DELETE'"
-          v-if="this.data && !isEditing"
-          color="error"
-          depressed
-          :disabled="isLoading"
-          @click="deleteItem"
-        >
-          Excluir
-        </v-btn>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            v-permission="'DELETE'"
+            v-if="this.data && !isEditing"
+            color="error"
+            depressed
+            :disabled="isLoading"
+            @click="deleteItem"
+          >
+            Excluir
+          </v-btn>
 
-        <v-btn
-          v-permission="'UPDATE'"
-          v-if="this.data && !isEditing"
-          color="secondary"
-          depressed
-          :disabled="isLoading"
-          @click="isEditing = !isEditing"
-        >
-          Editar
-        </v-btn>
-        <v-btn
-          color="warning"
-          depressed
-          :disabled="isLoading"
-          @click="closeDialog()"
-        >
-          Fechar
-        </v-btn>
-        <v-btn
-          v-if="isEditing || !data"
-          color="primary"
-          depressed
-          :loading="isLoading"
-          @click="save"
-        >
-          Salvar
-        </v-btn>
-      </v-card-actions>
+          <v-btn
+            v-permission="'UPDATE'"
+            v-if="this.data && !isEditing"
+            color="secondary"
+            depressed
+            :disabled="isLoading"
+            @click="isEditing = !isEditing"
+          >
+            Editar
+          </v-btn>
+          <v-btn
+            color="warning"
+            depressed
+            :disabled="isLoading"
+            @click="closeDialog()"
+          >
+            Fechar
+          </v-btn>
+          <v-btn
+            v-if="isEditing || !data"
+            color="primary"
+            depressed
+            :loading="isLoading"
+            type="submit"
+          >
+            Salvar
+          </v-btn>
+        </v-card-actions>
+      </v-form>
     </v-card>
   </v-dialog>
 </template>
@@ -218,6 +220,8 @@ export default {
   }),
   methods: {
     async save() {
+      if (this.isLoading) return;
+
       if (this.$refs.form.validate()) {
         this.isLoading = true;
         if (!this.data) {
