@@ -4,8 +4,9 @@
     @click:outside="closeDialog"
     @keydown.esc="closeDialog"
     max-width="600"
+    :fullscreen="$vuetify.breakpoint.xsOnly"
   >
-    <v-card>
+    <v-card class="flexcard">
       <v-card-title class="text-h6 primary--background">
         <v-icon dense left color="white">
           {{ $router.currentRoute.meta.icon }}
@@ -16,7 +17,10 @@
         <span class="ml-1">{{ $router.currentRoute.name }}</span>
       </v-card-title>
 
-      <v-card-text class="pa-3 overflow-y-auto" style="max-height: 60vh">
+      <v-card-text
+        class="pa-3 overflow-y-auto grow"
+        :style="{ 'max-height': $vuetify.breakpoint.xsOnly ? '86vh' : '60vh' }"
+      >
         <v-container>
           <v-form ref="form">
             <!-- {{ item }} -->
@@ -290,6 +294,11 @@ export default {
 </script>
 
 <style>
+.flexcard {
+  display: flex;
+  flex-direction: column;
+}
+
 .v-input--is-readonly > .v-input__control > .v-input__slot:before {
   border-style: none !important;
 }
