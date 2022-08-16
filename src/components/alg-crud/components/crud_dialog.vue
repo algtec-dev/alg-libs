@@ -173,6 +173,7 @@
           </v-btn>
         </v-card-actions>
       </v-form>
+      <DeleteConfirmation ref="delete" />
     </v-card>
   </v-dialog>
 </template>
@@ -184,6 +185,8 @@ import DateTimePicker from "./datetime_picker.vue";
 
 import AlgIconPicker from "../../alg-icon-picker/icon-picker.vue";
 import AddressInput from "../../address-input/address-input.vue";
+
+import DeleteConfirmation from "./DeleteConfirmation.vue";
 
 export default {
   props: {
@@ -197,6 +200,7 @@ export default {
     AlgIconPicker,
     DateTimePicker,
     AddressInput,
+    DeleteConfirmation,
   },
   created() {
     if (this.data) {
@@ -271,21 +275,26 @@ export default {
     },
     async deleteItem() {
       this.isLoading = true;
-      var errors;
+      let confirmation = await this.$refs.delete.open();
+      if (confirmation) {
+        var errors;
 
-      await http
-        .delete(this.route + "/" + this.item._id)
-        .catch(function (error) {
-          console.log(error);
-          errors = true;
-        });
+        await http
+          .delete(this.route + "/" + this.item._id)
+          .catch(function (error) {
+            console.log(error);
+            errors = true;
+          });
 
-      if (!errors) {
-        this.$root.notify.showSuccessToast("Item excluído");
+        if (!errors) {
+          this.$root.notify.showSuccessToast("Item excluído");
 
-        this.closeDialog(true);
+          this.closeDialog(true);
+        } else {
+          this.$root.notify.showErrorToast("Erro");
+          this.isLoading = false;
+        }
       } else {
-        this.$root.notify.showErrorToast("Erro");
         this.isLoading = false;
       }
     },
