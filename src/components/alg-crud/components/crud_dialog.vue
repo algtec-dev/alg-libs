@@ -3,7 +3,7 @@
     v-model="crudDialogState"
     @click:outside="closeDialog"
     @keydown.esc="closeDialog"
-    max-width="600"
+    max-width="800"
     :fullscreen="$vuetify.breakpoint.xsOnly"
   >
     <v-card class="flexcard">
