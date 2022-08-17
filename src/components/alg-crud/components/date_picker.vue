@@ -15,6 +15,7 @@
         v-model="fieldDate"
         :label="title"
         prepend-inner-icon="mdi-calendar"
+        :error-messages="error"
         v-on="on"
       >
         <template v-slot:progress>
@@ -42,6 +43,7 @@ export default {
     title: String,
     value: String,
     disable: Boolean,
+    error: String,
   },
   created() {
     this.pickerDate = this.parseDate(this.value);

@@ -25,7 +25,7 @@
           }"
         >
           <v-container>
-            <!-- {{ item }} -->
+            {{ item }}
             <v-row>
               <v-col
                 class="py-0"
@@ -40,6 +40,7 @@
                   :type="el.type"
                   :label="el.value"
                   v-mask="el.mask"
+                  :error-messages="error[el.key]"
                   required
                   :rules="
                     el.rules != undefined
@@ -52,6 +53,7 @@
                 <DatePicker
                   v-if="el.type == 'date'"
                   v-model="item[el.key]"
+                  :error="error[el.key]"
                   :type="el.type"
                   :title="el.value"
                   :disable="isLoading || (data && !isEditing)"
@@ -75,6 +77,7 @@
                   :label="el.value"
                   hide-details
                   required
+                  :error-messages="error[el.key]"
                   :rules="
                     el.rules != undefined
                       ? el.rules
@@ -92,6 +95,7 @@
                   item-text="text"
                   item-value="value"
                   :multiple="el.multiple"
+                  :error-messages="error[el.key]"
                   required
                   :rules="
                     el.rules != undefined
@@ -111,6 +115,7 @@
                   dense
                   v-if="el.type == 'boolean'"
                   v-model="item[el.key]"
+                  :error-messages="error[el.key]"
                   hide-details
                   :readonly="isLoading || (data && !isEditing)"
                 ></v-switch>
@@ -217,6 +222,7 @@ export default {
     }
   },
   data: () => ({
+    error: {},
     isNew: false,
     item: {},
     isEditing: false,
@@ -237,40 +243,68 @@ export default {
       }
     },
     async createItem() {
-      var errors;
+      var isError = false;
+      var errors = [];
+      this.error = {};
 
       await http.post(this.route, this.item).catch(function (error) {
         console.log(error);
-        errors = true;
+        isError = true;
+        if (error.response.data.code == 400) {
+          errors = Object.values(error.response.data.errors);
+        }
+        if (error.response.data.code == 409) {
+          Object.keys(error.response.data.errors).forEach((element) => {
+            errors.push({ path: element, message: "Valor já existente" });
+          });
+        }
       });
 
-      if (!errors) {
+      if (!isError) {
         this.$root.notify.showSuccessToast("Item Adicionado");
         this.closeDialog(true);
       } else {
-        this.$root.notify.showErrorToast("Erro");
+        errors.forEach((element) => {
+          this.error[element.path] = element.message;
+        });
+
+        this.$root.notify.showErrorToast("Erro ao Salvar");
       }
     },
     async updateItem() {
       if (JSON.stringify(this.item) == JSON.stringify(this.data)) {
-        // this.$root.vtoast.show({ message: "Sem Alterações", color: "warning" });
+        this.$root.notify.showErrorToast("Sem Alterações");
         return;
       }
 
-      var errors;
+      var isError = false;
+      var errors = [];
+      this.error = {};
 
       await http
         .patch(this.route + "/" + this.item._id, this.item)
         .catch(function (error) {
           console.log(error);
-          errors = true;
+          isError = true;
+          if (error.response.data.code == 400) {
+            errors = Object.values(error.response.data.errors);
+          }
+          if (error.response.data.code == 409) {
+            Object.keys(error.response.data.errors).forEach((element) => {
+              errors.push({ path: element, message: "Valor já existente" });
+            });
+          }
         });
 
-      if (!errors) {
+      if (!isError) {
         this.$root.notify.showSuccessToast("Dados Alterados");
         this.closeDialog(true);
       } else {
-        this.$root.notify.showErrorToast("Erro");
+        errors.forEach((element) => {
+          this.error[element.path] = element.message;
+        });
+
+        this.$root.notify.showErrorToast("Erro ao editar");
       }
     },
     async deleteItem() {
@@ -291,7 +325,7 @@ export default {
 
           this.closeDialog(true);
         } else {
-          this.$root.notify.showErrorToast("Erro");
+          this.$root.notify.showErrorToast("Erro ao excluir");
           this.isLoading = false;
         }
       } else {
