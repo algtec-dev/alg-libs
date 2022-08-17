@@ -5,6 +5,7 @@
         v-bind="$attrs"
         label="CEP"
         v-model="item.address.cep"
+        :error-messages="errors['cep']"
         required
         v-mask="['#####-###']"
         @input="cepSearch"
@@ -16,6 +17,7 @@
         v-bind="$attrs"
         label="Endereço"
         v-model="item.address.streetName"
+        :error-messages="errors['streetName']"
         required
         validate-on-blur
       ></v-text-field>
@@ -25,6 +27,7 @@
         v-bind="$attrs"
         label="Numero"
         v-model="item.address.streetNumber"
+        :error-messages="errors['streetNumber']"
         required
         validate-on-blur
       ></v-text-field>
@@ -34,6 +37,7 @@
         v-bind="$attrs"
         label="Bairro"
         v-model="item.address.neighborhood"
+        :error-messages="errors['neighborhood']"
         required
         validate-on-blur
       ></v-text-field>
@@ -43,6 +47,7 @@
         v-bind="$attrs"
         label="Cidade"
         v-model="item.address.city"
+        :error-messages="errors['city']"
         required
         validate-on-blur
       ></v-text-field>
@@ -52,6 +57,7 @@
         v-bind="$attrs"
         label="Estado"
         v-model="item.address.uf"
+        :error-messages="errors['uf']"
         required
         validate-on-blu
         :items="states"
@@ -68,6 +74,7 @@ import http from "@/plugins/axios.js";
 export default {
   props: {
     value: Object,
+    errors: Object,
   },
   created() {
     let temp = JSON.parse(JSON.stringify(this.value));
@@ -138,8 +145,14 @@ export default {
             city: response.data.localidade,
             uf: response.data.uf,
           };
+        } else {
+          this.errors["cep"] = "CEP Invalido";
         }
         this.isSearching = false;
+      }
+      if (el.length == 0) {
+        this.errors["cep"] = "";
+        this.item.address = {};
       }
     },
   },

@@ -122,6 +122,7 @@
                 <AddressInput
                   v-if="el.type == 'address'"
                   v-model="item"
+                  :errors="error"
                   :readonly="isLoading || (data && !isEditing)"
                 ></AddressInput>
               </v-col>
@@ -193,6 +194,8 @@ import AddressInput from "../../address-input/address-input.vue";
 
 import DeleteConfirmation from "./DeleteConfirmation.vue";
 
+import wipeObject from "../../../utils/wipeObject.js";
+
 export default {
   props: {
     crudDialogState: Boolean,
@@ -246,8 +249,9 @@ export default {
       var isError = false;
       var errors = [];
       this.error = {};
+      let temp = wipeObject(JSON.parse(JSON.stringify(this.item)));
 
-      await http.post(this.route, this.item).catch(function (error) {
+      await http.post(this.route, temp).catch(function (error) {
         console.log(error);
         isError = true;
         if (error.response.data.code == 400) {
@@ -272,7 +276,9 @@ export default {
       }
     },
     async updateItem() {
-      if (JSON.stringify(this.item) == JSON.stringify(this.data)) {
+      let temp = wipeObject(JSON.parse(JSON.stringify(this.item)));
+
+      if (JSON.stringify(temp) == JSON.stringify(this.data)) {
         this.$root.notify.showErrorToast("Sem Alterações");
         return;
       }
@@ -282,7 +288,7 @@ export default {
       this.error = {};
 
       await http
-        .patch(this.route + "/" + this.item._id, this.item)
+        .patch(this.route + "/" + this.item._id, temp)
         .catch(function (error) {
           console.log(error);
           isError = true;
