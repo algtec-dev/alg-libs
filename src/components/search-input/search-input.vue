@@ -8,6 +8,7 @@
     hide-no-data
     @change="$emit('input', model)"
     no-filter
+    cache-items
   >
     <!-- <template v-if="listShowValues" v-slot:selection="data">
       <div v-for="(k, i) in listShowValues" :key="i">
@@ -56,9 +57,19 @@ export default {
     async getInitial() {
       this.isLoading = true;
       try {
-        var response = await http.get(this.url + "/" + this.value);
+        if (this.value instanceof Array) {
+          var data = await Promise.all(
+            this.value.map((val) => http.get(this.url + "/" + val))
+          );
 
-        this.items.push(response.data);
+          for (const key in data) {
+            this.items.push(data[key].data);
+          }
+        } else {
+          var response = await http.get(this.url + "/" + this.value);
+
+          this.items.push(response.data);
+        }
 
         this.isLoading = false;
       } catch (error) {
