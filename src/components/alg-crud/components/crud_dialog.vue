@@ -86,6 +86,26 @@
                   :readonly="isLoading || (data && !isEditing)"
                   validate-on-blur
                 ></AlgIconPicker>
+                <SearchInput
+                  v-if="el.type == 'search'"
+                  v-model="item[el.key]"
+                  :label="el.value"
+                  hide-details
+                  required
+                  :multiple="el.multiple"
+                  :error-messages="error[el.key]"
+                  :url="el.url"
+                  :item-text="el.itemValue"
+                  :item-value="el.itemKey"
+                  :rules="
+                    el.rules != undefined
+                      ? el.rules
+                      : [(v) => !!v || 'Campo Obrigatório']
+                  "
+                  :readonly="isLoading || (data && !isEditing)"
+                  validate-on-blur
+                  :listShowValues="el.listShowValues"
+                ></SearchInput>
                 <v-autocomplete
                   v-if="el.type == 'select'"
                   v-model="item[el.key]"
@@ -190,6 +210,8 @@ import DatePicker from "./date_picker.vue";
 import DateTimePicker from "./datetime_picker.vue";
 
 import AlgIconPicker from "../../alg-icon-picker/icon-picker.vue";
+import SearchInput from "../../search-input/search-input.vue";
+
 import AddressInput from "../../address-input/address-input.vue";
 
 import DeleteConfirmation from "./DeleteConfirmation.vue";
@@ -209,6 +231,7 @@ export default {
     DateTimePicker,
     AddressInput,
     DeleteConfirmation,
+    SearchInput,
   },
   created() {
     if (this.data) {
