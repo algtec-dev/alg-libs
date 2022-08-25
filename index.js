@@ -15,7 +15,6 @@ function install(Vue, options = {}) {
 
     Vue.directive('permission', {
         bind: function (el, binding, vnode) {
-            let modules = JSON.parse(localStorage.getItem('modules'))
 
             const currentService = options.router.currentRoute.path.substring(1)
 
