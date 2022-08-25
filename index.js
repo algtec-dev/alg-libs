@@ -16,6 +16,8 @@ function install(Vue, options = {}) {
     Vue.directive('permission', {
         bind: function (el, binding, vnode) {
 
+            if (!binding.value) return;
+
             const currentService = options.router.currentRoute.path.substring(1)
 
             if (!options.store.state.permissions[currentService].includes(binding.value))

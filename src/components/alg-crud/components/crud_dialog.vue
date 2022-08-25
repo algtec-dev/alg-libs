@@ -33,6 +33,7 @@
                 :md="el.size ? el.size : 12"
                 v-for="el in headers"
                 :key="el.key"
+                v-permission="el.permission"
               >
                 <v-text-field
                   v-if="el.type == 'text' || el.type == 'number'"
