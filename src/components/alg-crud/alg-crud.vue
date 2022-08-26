@@ -82,17 +82,18 @@
         @click:row="showCrudDialog($event)"
       >
         <!-- para itens que precisem de personalização -->
-        <template v-slot:[`item.icon`]="{ item }">
-          <v-icon>{{ item.icon }}</v-icon>
-        </template>
-        <template v-slot:[`item.date`]="{ item }">
-          <span>{{ new Date(item.date).toLocaleString() }}</span>
-        </template>
-        <template v-slot:[`item.createdAt`]="{ item }">
-          <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
-        </template>
-        <template v-slot:[`item.cellphone`]="{ item }">
-          <span>{{ maskedPhone(item.cellphone) }}</span>
+        <template
+          v-for="(slot, i) in data"
+          v-slot:[`item.${slot.key}`]="{ item }"
+        >
+          <div :key="i">
+            <slot
+              v-if="hasSlot(slot.key)"
+              :name="slot.key"
+              v-bind:data="item[slot.key]"
+            />
+            <span v-else v-html="item[slot.key]" />
+          </div>
         </template>
       </v-data-table>
     </v-card>
@@ -169,14 +170,8 @@ export default {
     };
   },
   methods: {
-    maskedPhone(x) {
-      let masked;
-      try {
-        masked = `(${x[0]}${x[1]}) ${x.substring(2, 7)}-${x.substring(7)}`;
-      } catch (error) {
-        masked = "";
-      }
-      return masked;
+    hasSlot(slot) {
+      return !!this.$scopedSlots[slot];
     },
     async getData() {
       this.isLoading = true;
