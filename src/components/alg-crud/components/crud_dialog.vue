@@ -279,7 +279,14 @@ export default {
         console.log(error);
         isError = true;
         if (error.response.data.code == 400) {
-          errors = Object.values(error.response.data.errors);
+          let fields = Object.keys(error.response.data.errors);
+          let temp = error.response.data.errors;
+
+          fields.forEach((element) => {
+            if (temp[element].message)
+              errors.push({ path: element, message: temp[element].message });
+            else errors.push({ path: element, message: temp[element] });
+          });
         }
         if (error.response.data.code == 409) {
           Object.keys(error.response.data.errors).forEach((element) => {
@@ -317,7 +324,14 @@ export default {
           console.log(error);
           isError = true;
           if (error.response.data.code == 400) {
-            errors = Object.values(error.response.data.errors);
+            let fields = Object.keys(error.response.data.errors);
+            let temp = error.response.data.errors;
+
+            fields.forEach((element) => {
+              if (temp[element].message)
+                errors.push({ path: element, message: temp[element].message });
+              else errors.push({ path: element, message: temp[element] });
+            });
           }
           if (error.response.data.code == 409) {
             Object.keys(error.response.data.errors).forEach((element) => {
