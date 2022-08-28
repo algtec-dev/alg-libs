@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="12" class="py-0">
+    <v-col cols="3" class="py-0">
       <v-text-field
         v-bind="$attrs"
         label="CEP"
@@ -12,7 +12,7 @@
         validate-on-blur
       ></v-text-field>
     </v-col>
-    <v-col cols="8" class="py-0">
+    <v-col cols="7" class="py-0">
       <v-text-field
         v-bind="$attrs"
         label="Endereço"
@@ -22,7 +22,7 @@
         validate-on-blur
       ></v-text-field>
     </v-col>
-    <v-col cols="4" class="py-0">
+    <v-col cols="2" class="py-0">
       <v-text-field
         v-bind="$attrs"
         label="Numero"
