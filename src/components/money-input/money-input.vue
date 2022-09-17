@@ -1,10 +1,5 @@
 <template>
-  <v-text-field
-    v-bind="$attrs"
-    v-model="cmpValue"
-    prefix="R$"
-    counter="16"
-  ></v-text-field>
+  <v-text-field v-bind="$attrs" v-model="cmpValue" prefix="R$"></v-text-field>
 </template>
 
 <script>
