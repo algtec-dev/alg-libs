@@ -83,17 +83,10 @@
       >
         <!-- para itens que precisem de personalização -->
         <template
-          v-for="(slot, i) in data"
-          v-slot:[`item.${slot.key}`]="{ item }"
+          v-for="header in headers.filter((header) => header.formatter)"
+          v-slot:[`item.${header.value}`]="{ value }"
         >
-          <div :key="i">
-            <slot
-              v-if="hasSlot(slot.key)"
-              :name="slot.key"
-              v-bind:data="item[slot.key]"
-            />
-            <span v-else v-html="item[slot.key]" />
-          </div>
+          {{ header.formatter(value) }}
         </template>
       </v-data-table>
     </v-card>
@@ -134,6 +127,7 @@ export default {
           text: el.value,
           value: el.key,
           sortable: true,
+          formatter: el.tableMask,
         });
     });
     // await this.getData();
@@ -170,9 +164,6 @@ export default {
     };
   },
   methods: {
-    hasSlot(slot) {
-      return !!this.$scopedSlots[slot];
-    },
     async getData() {
       this.isLoading = true;
       const { sortBy, sortDesc, page, itemsPerPage } = this.options;
