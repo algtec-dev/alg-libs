@@ -25,7 +25,7 @@
           }"
         >
           <v-container>
-            <!-- {{ item }} -->
+            {{ item }}
             <v-row>
               <v-col
                 class="py-0"
@@ -51,6 +51,22 @@
                   :readonly="isLoading || (data && !isEditing)"
                   validate-on-blur
                 ></v-text-field>
+                <MoneyInput
+                  v-if="el.type == 'money'"
+                  v-model="item[el.key]"
+                  :type="el.type"
+                  :label="el.value"
+                  v-mask="el.mask"
+                  :error-messages="error[el.key]"
+                  required
+                  :rules="
+                    el.rules != undefined
+                      ? el.rules
+                      : [(v) => !!v || 'Campo Obrigatório']
+                  "
+                  :readonly="isLoading || (data && !isEditing)"
+                  validate-on-blur
+                />
                 <DatePicker
                   v-if="el.type == 'date'"
                   v-model="item[el.key]"
@@ -214,6 +230,7 @@ import AlgIconPicker from "../../alg-icon-picker/icon-picker.vue";
 import SearchInput from "../../search-input/search-input.vue";
 
 import AddressInput from "../../address-input/address-input.vue";
+import MoneyInput from "../../money-input/money-input.vue";
 
 import DeleteConfirmation from "./DeleteConfirmation.vue";
 
@@ -233,6 +250,7 @@ export default {
     AddressInput,
     DeleteConfirmation,
     SearchInput,
+    MoneyInput,
   },
   created() {
     if (this.data) {
