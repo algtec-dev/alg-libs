@@ -25,7 +25,7 @@
           }"
         >
           <v-container>
-            {{ item }}
+            <!-- {{ item }} -->
             <v-row>
               <v-col
                 class="py-0"
