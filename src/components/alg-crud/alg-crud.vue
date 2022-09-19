@@ -88,6 +88,18 @@
         >
           {{ header.formatter(value) }}
         </template>
+
+        <!-- para tipo icone -->
+        <template v-slot:[`item.icon`]="{ item }">
+          <v-icon>{{ item.icon }}</v-icon>
+        </template>
+
+        <!-- <template
+          v-for="header in headers.filter((header) => header.type == 'icon')"
+          v-slot:[`item.${header.value}`]="{ value }"
+        >
+          <v-icon :key="header.value">{{ value }}</v-icon>
+        </template> -->
       </v-data-table>
     </v-card>
     <CrudDialog
@@ -128,6 +140,7 @@ export default {
           value: el.key,
           sortable: true,
           formatter: el.tableMask,
+          // type: el.type,
         });
     });
     // await this.getData();
