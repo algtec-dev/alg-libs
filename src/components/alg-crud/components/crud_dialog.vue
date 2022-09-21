@@ -74,6 +74,12 @@
                   :type="el.type"
                   :title="el.value"
                   :disable="isLoading || (data && !isEditing)"
+                  :returnTimestamp="el.returnTimestamp"
+                  :rules="
+                    el.rules != undefined
+                      ? el.rules
+                      : [(v) => !!v || 'Campo Obrigatório']
+                  "
                 />
                 <DateTimePicker
                   v-if="el.type == 'timestamp'"

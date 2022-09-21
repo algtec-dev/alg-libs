@@ -15,11 +15,11 @@
     >
       <template v-slot:dateIcon>
         <v-icon left> mdi-calendar </v-icon>
-        data
+        Data
       </template>
       <template v-slot:timeIcon>
         <v-icon left> mdi-clock-outline </v-icon>
-        data
+        Hora
       </template>
     </v-datetime-picker>
     <v-divider></v-divider>

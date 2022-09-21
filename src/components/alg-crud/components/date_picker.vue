@@ -17,6 +17,7 @@
         prepend-inner-icon="mdi-calendar"
         :error-messages="error"
         v-on="on"
+        :rules="rules"
       >
         <template v-slot:progress>
           <!-- pra simular a barra inferior quando está clicavel -->
@@ -44,6 +45,7 @@ export default {
     value: String,
     disable: Boolean,
     error: String,
+    rules: Array,
   },
   created() {
     this.pickerDate = this.parseDate(this.value);
