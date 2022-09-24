@@ -1,82 +1,124 @@
 <template>
-  <v-menu
-    v-model="menu"
-    :close-on-content-click="false"
-    :disabled="disable"
-    transition="scale-transition"
-    offset-y
-    max-width="290px"
-    min-width="auto"
+  <v-dialog
+    v-model="dialog"
+    @click:outside="closeDialog"
+    @keydown.esc="closeDialog"
+    :max-width="isOnlyDate ? 290 : 580"
   >
     <template v-slot:activator="{ on }">
       <v-text-field
-        readonly
-        :loading="!disable"
-        v-model="fieldDate"
-        :label="title"
+        v-model="inputValue"
+        v-bind="$attrs"
+        v-on="$attrs.readonly ? null : on"
+        @click="init"
         prepend-inner-icon="mdi-calendar"
-        :error-messages="error"
-        v-on="on"
-        :rules="rules"
+        :clearable="!$attrs.readonly"
       >
-        <template v-slot:progress>
-          <!-- pra simular a barra inferior quando está clicavel -->
-          <v-progress-linear
-            absolute
-            background-color="grey"
-            height="1"
-          ></v-progress-linear>
-        </template>
       </v-text-field>
     </template>
-    <v-date-picker
-      color="primary"
-      no-title
-      v-model="pickerDate"
-      @click:date="selectDate()"
-    ></v-date-picker>
-  </v-menu>
+
+    <v-card>
+      <v-row no-gutters justify="space-around">
+        <v-date-picker v-model="dateModel"></v-date-picker>
+        <v-time-picker
+          v-if="!isOnlyDate"
+          v-model="hourModel"
+          format="24hr"
+        ></v-time-picker>
+      </v-row>
+      <v-row no-gutters>
+        <v-spacer></v-spacer>
+        <v-btn text @click="save">Salvar</v-btn>
+      </v-row>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
+const timeNow = Date.now();
 export default {
   props: {
-    title: String,
     value: String,
-    disable: Boolean,
-    error: String,
-    rules: Array,
+    dateType: String,
+    onlyDate: Boolean,
   },
-  created() {
-    this.pickerDate = this.parseDate(this.value);
-    this.fieldDate = this.value;
+  computed: {
+    isOnlyDate() {
+      if (this.dateType == "date") return true;
+      if (this.onlyDate) return true;
+      return false;
+    },
+    jsDateTime() {
+      let temp = new Date(new Date(timeNow).setHours(0, 0, 0, 0));
+
+      let dateValues = this.dateModel.split("-");
+      dateValues[1]--;
+      temp.setFullYear(...dateValues);
+
+      let hourValues = this.hourModel.split(":");
+      temp.setHours(...hourValues);
+
+      return temp;
+    },
+  },
+  mounted() {
+    this.init();
+  },
+  watch: {
+    inputValue(newValue) {
+      if (!newValue) {
+        this.$emit("input");
+      }
+    },
   },
   data: () => ({
-    menu: false,
-    pickerDate: "",
-    fieldDate: "",
+    dateModel: new Date(timeNow).toISOString().substr(0, 10),
+    hourModel: "00:00",
+    inputValue: "",
+    dialog: false,
   }),
   methods: {
-    selectDate() {
-      this.menu = false;
-      this.fieldDate = this.formatDate(this.pickerDate);
-      this.$emit("input", this.fieldDate);
+    getPreviewDate() {
+      if (this.isOnlyDate) return this.jsDateTime.toLocaleDateString();
+      else return this.jsDateTime.toLocaleString().substring(0, 16);
     },
-    formatDate(date) {
-      // return DD/MM/YYYY format
-      if (!date) return null;
-
-      const [year, month, day] = date.split("-");
-      return `${day}/${month}/${year}`;
+    getOutputDate() {
+      if (this.dateType == "date") return this.jsDateTime.toLocaleDateString();
+      else return this.jsDateTime.toISOString();
     },
-    parseDate(date) {
-      // return YYYY-MM-DD format
-      if (!date) return null;
+    init() {
+      // works like a created function
+      if (this.value) {
+        if (this.dateType == "date") {
+          const [day, month, year] = this.value.split("/");
+          this.dateModel = new Date(year, month - 1, day)
+            .toISOString()
+            .substr(0, 10);
+        } else {
+          let tempDate = new Date(this.value);
 
-      const [day, month, year] = date.split("/");
-      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+          this.dateModel = tempDate.toISOString().substr(0, 10);
+          this.hourModel = tempDate.toTimeString().substring(0, 4);
+        }
+        this.inputValue = this.getPreviewDate();
+      }
+    },
+    save() {
+      this.inputValue = this.getPreviewDate();
+      this.$emit("input", this.getOutputDate());
+      this.closeDialog();
+    },
+    closeDialog() {
+      this.dateModel = new Date(timeNow).toISOString().substr(0, 10);
+      this.hourModel = "00:00";
+      this.dialog = false;
     },
   },
 };
 </script>
 
+<style >
+.v-date-picker-title {
+  height: 70px;
+}
+</style>

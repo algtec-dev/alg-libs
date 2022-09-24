@@ -68,25 +68,15 @@
                   validate-on-blur
                 />
                 <DatePicker
-                  v-if="el.type == 'date'"
+                  v-if="el.type == 'date' || el.type == 'timestamp'"
                   v-model="item[el.key]"
-                  :error="error[el.key]"
-                  :type="el.type"
-                  :title="el.value"
-                  :disable="isLoading || (data && !isEditing)"
-                  :returnTimestamp="el.returnTimestamp"
-                  :rules="
-                    el.rules != undefined
-                      ? el.rules
-                      : [(v) => !!v || 'Campo Obrigatório']
-                  "
-                />
-                <DateTimePicker
-                  v-if="el.type == 'timestamp'"
-                  v-model="item[el.key]"
-                  :type="el.type"
+                  :dateType="el.type"
+                  :onlyDate="el.onlyDate"
                   :label="el.value"
-                  :disabled="isLoading || (data && !isEditing)"
+                  :error-messages="error[el.key]"
+                  required
+                  :error="error[el.key]"
+                  :readonly="isLoading || (data && !isEditing)"
                   :rules="
                     el.rules != undefined
                       ? el.rules
@@ -230,7 +220,6 @@
 <script>
 import http from "@/plugins/axios.js";
 import DatePicker from "./date_picker.vue";
-import DateTimePicker from "./datetime_picker.vue";
 
 import AlgIconPicker from "../../alg-icon-picker/icon-picker.vue";
 import SearchInput from "../../search-input/search-input.vue";
@@ -252,7 +241,6 @@ export default {
   components: {
     DatePicker,
     AlgIconPicker,
-    DateTimePicker,
     AddressInput,
     DeleteConfirmation,
     SearchInput,
