@@ -10,7 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
-    "v-mask": "^2.3.0",
-    "vuetify-datetime-picker": "^2.1.1"
+    "v-mask": "^2.3.0"
   }
 }
