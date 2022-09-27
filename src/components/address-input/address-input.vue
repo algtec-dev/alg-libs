@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="3" class="py-0">
+    <v-col cols="2" class="py-0">
       <v-text-field
         v-bind="$attrs"
         label="CEP"
@@ -12,7 +12,7 @@
         validate-on-blur
       ></v-text-field>
     </v-col>
-    <v-col cols="7" class="py-0">
+    <v-col cols="6" class="py-0">
       <v-text-field
         v-bind="$attrs"
         label="Endereço"
@@ -25,10 +25,19 @@
     <v-col cols="2" class="py-0">
       <v-text-field
         v-bind="$attrs"
-        label="Numero"
+        label="Número"
         v-model="item.address.streetNumber"
         :error-messages="errors['streetNumber']"
         required
+        validate-on-blur
+      ></v-text-field>
+    </v-col>
+    <v-col cols="2" class="py-0">
+      <v-text-field
+        v-bind="$attrs"
+        label="Complemento"
+        v-model="item.address.complement"
+        :error-messages="errors['complement']"
         validate-on-blur
       ></v-text-field>
     </v-col>
@@ -59,7 +68,7 @@
         v-model="item.address.uf"
         :error-messages="errors['uf']"
         required
-        validate-on-blu
+        validate-on-blur
         :items="states"
         item-text="text"
         item-value="value"
