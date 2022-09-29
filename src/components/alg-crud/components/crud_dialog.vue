@@ -165,6 +165,7 @@
               v-bind:isEditing="isEditing"
               v-bind:isLoading="isLoading"
               v-bind:isNew="isNew"
+              v-bind:errors="error"
               v-bind:item="item"
             ></slot>
           </v-container>
