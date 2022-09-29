@@ -25,7 +25,7 @@
           }"
         >
           <v-container>
-            <!-- {{ item }} -->
+            {{ item }}
             <v-row>
               <v-col
                 class="py-0"
@@ -75,7 +75,6 @@
                   :label="el.value"
                   :error-messages="error[el.key]"
                   required
-                  :error="error[el.key]"
                   :readonly="isLoading || (data && !isEditing)"
                   :rules="
                     el.rules != undefined
