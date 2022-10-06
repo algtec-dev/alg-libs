@@ -94,6 +94,11 @@
           <v-icon>{{ item.icon }}</v-icon>
         </template>
 
+        <!-- para nome social -->
+        <template v-slot:[`item.name`]="{ item }">
+          {{ item.socialName ? item.socialName : item.name }}
+        </template>
+
         <!-- <template
           v-for="header in headers.filter((header) => header.type == 'icon')"
           v-slot:[`item.${header.value}`]="{ value }"
