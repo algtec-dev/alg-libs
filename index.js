@@ -3,7 +3,7 @@ import AlgLogin from './src/components/alg-login/alg-login.vue'
 import AlgToast from './src/components/alg-toast/alg-toast.vue'
 import AlgIconPicker from './src/components/alg-icon-picker/icon-picker.vue'
 import DatePicker from './src/components/alg-crud/components/date_picker.vue'
-
+import MoneyInput from './src/components/money-input/money-input.vue'
 
 import { VueMaskDirective } from 'v-mask'
 
@@ -40,6 +40,7 @@ function install(Vue, options = {}) {
     Vue.component('AlgToast', AlgToast)
     Vue.component('AlgIconPicker', AlgIconPicker)
     Vue.component('DatePicker', DatePicker)
+    Vue.component('MoneyInput', MoneyInput)
 }
 
 export default {

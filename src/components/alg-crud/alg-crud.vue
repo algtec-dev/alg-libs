@@ -119,6 +119,9 @@
       <template v-slot:dialog="props">
         <slot name="dialog" v-bind:data="props"> </slot>
       </template>
+      <template v-slot:replace-dialog="props">
+        <slot name="replace-dialog" v-bind:data="props"> </slot>
+      </template>
     </CrudDialog>
   </v-container>
 </template>

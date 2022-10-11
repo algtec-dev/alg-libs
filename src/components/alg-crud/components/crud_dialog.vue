@@ -18,14 +18,16 @@
           <span class="ml-1">{{ $router.currentRoute.name }}</span>
         </v-card-title>
 
-        <v-card-text
-          class="pa-3 overflow-y-auto grow"
-          :style="{
-            'max-height': $vuetify.breakpoint.xsOnly ? '86vh' : '60vh',
-          }"
-        >
-          <v-container>
-            <!-- {{ item }} -->
+        <v-card-text class="grow" :class="getCardClass" :style="getCardStyle">
+          <slot
+            name="replace-dialog"
+            v-bind:isEditing="isEditing"
+            v-bind:isLoading="isLoading"
+            v-bind:isNew="isNew"
+            v-bind:errors="error"
+            v-bind:item="item"
+          ></slot>
+          <v-container v-if="!hasSlot('replace-dialog')">
             <v-row>
               <v-col
                 class="py-0"
@@ -260,6 +262,27 @@ export default {
       this.isNew = true;
     }
   },
+  computed: {
+    getCardClass() {
+      let hasSlot = this.hasSlot("replace-dialog");
+
+      return {
+        "pa-3": !hasSlot,
+        "pa-0": hasSlot,
+        "overflow-y-auto": !hasSlot,
+      };
+    },
+    getCardStyle() {
+      if (this.hasSlot("replace-dialog")) return;
+
+      let temp = {};
+
+      if (this.$vuetify.breakpoint.xsOnly) temp["height"] = "86vh";
+      else temp["max-height"] = "60vh";
+
+      return temp;
+    },
+  },
   data: () => ({
     error: {},
     isNew: false,
@@ -268,7 +291,11 @@ export default {
     isLoading: false,
   }),
   methods: {
+    hasSlot(slot) {
+      return !!this.$parent.$scopedSlots[slot];
+    },
     async save() {
+      // console.log(this.item);
       if (this.isLoading) return;
 
       if (this.$refs.form.validate()) {
