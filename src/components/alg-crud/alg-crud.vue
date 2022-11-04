@@ -99,6 +99,22 @@
           {{ item.socialName ? item.socialName : item.name }}
         </template>
 
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-btn
+            v-for="(btn, i) in headers.filter((h) => h.value == 'actions')[0]
+              .actions"
+            :key="i"
+            text
+            @click.stop="btn.action(item)"
+            class="pa-1"
+          >
+            <div class="d-flex flex-column text-caption">
+              <v-icon small>{{ btn.icon }}</v-icon>
+              {{ btn.text }}
+            </div>
+          </v-btn>
+        </template>
+
         <!-- <template
           v-for="header in headers.filter((header) => header.type == 'icon')"
           v-slot:[`item.${header.value}`]="{ value }"
@@ -146,8 +162,10 @@ export default {
         this.headers.push({
           text: el.value,
           value: el.key,
-          sortable: true,
+          sortable: el.key != "actions",
           formatter: el.tableMask,
+          actions: el.actions,
+          align: el.key == "actions" ? "center" : undefined,
           // type: el.type,
         });
     });
