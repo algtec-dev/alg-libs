@@ -393,6 +393,7 @@ export default {
     async deleteItem() {
       this.isLoading = true;
       let confirmation = await this.$refs.delete.open();
+      let duplicate = "Conflito";
       if (confirmation) {
         var errors;
 
@@ -400,6 +401,7 @@ export default {
           .delete(this.route + "/" + this.item._id)
           .catch(function (error) {
             console.log(error);
+            if(error.response.data.code === 422) duplicate = error.response.data.message;
             errors = true;
           });
 
@@ -408,8 +410,12 @@ export default {
 
           this.closeDialog(true);
         } else {
-          this.$root.notify.showErrorToast("Erro ao excluir");
-          this.isLoading = false;
+          if(duplicate != 'Conflito')           
+            this.$root.notify.showErrorToast(duplicate);
+          else
+            this.$root.notify.showErrorToast("Erro ao excluir");
+          
+            this.isLoading = false;
         }
       } else {
         this.isLoading = false;
