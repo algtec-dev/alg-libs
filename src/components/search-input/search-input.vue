@@ -6,6 +6,7 @@
     :loading="isLoading"
     :search-input.sync="search"
     hide-no-data
+    placeholder="Pesquisar"
     @change="$emit('input', model)"
     no-filter
     cache-items
