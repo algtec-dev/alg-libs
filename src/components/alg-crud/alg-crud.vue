@@ -29,6 +29,25 @@
         <!-- action button -->
         <v-col cols="12" md="5">
           <v-item-group class="text-center text-md-right">
+            <v-btn
+              v-if="hasSlot('filters')"
+              tile
+              color="secondary"
+              depressed
+              height="40"
+              @click="showFiltersDialog()"
+            >
+              <v-badge
+                color="success"
+                :content="filtersCount"
+                :value="filtersCount"
+                inline
+              >
+                <v-icon dense left> mdi-filter </v-icon>
+                <span class="caption">Filtros</span>
+              </v-badge>
+            </v-btn>
+
             <v-btn tile depressed height="40" @click="exportItems()">
               <v-icon dense left> mdi-printer </v-icon>
               <span class="caption">Exportar</span>
@@ -139,17 +158,30 @@
         <slot name="replace-dialog" v-bind:data="props"> </slot>
       </template>
     </CrudDialog>
+    <FiltersDialog
+      v-if="filtersDialogState"
+      :filtersDialogState="filtersDialogState"
+      v-model="filters"
+      @close-dialog="closeFiltersDialog"
+    >
+      <template v-slot:filters="props">
+        <slot name="filters" v-bind:data="props"> </slot>
+      </template>
+    </FiltersDialog>
   </v-container>
 </template>
 
 <script>
 import CrudDialog from "./components/crud_dialog.vue";
+import FiltersDialog from "./components/filters_dialog.vue";
+
 import http from "@/plugins/axios.js";
 
 export default {
   name: "AlgCrud",
   components: {
     CrudDialog,
+    FiltersDialog,
   },
   props: {
     route: String,
@@ -174,6 +206,11 @@ export default {
   mounted() {
     this.availableHeight = this.getTableHeight();
   },
+  computed: {
+    filtersCount() {
+      return Object.keys(this.filters).length;
+    },
+  },
   watch: {
     options: {
       handler() {
@@ -185,6 +222,14 @@ export default {
       this.options.page = 1;
       this.abortSearch.abort();
       this.getData();
+    },
+    filters: {
+      handler() {
+        this.options.page = 1;
+        this.abortSearch.abort();
+        this.getData();
+      },
+      deep: true,
     },
   },
   data() {
@@ -200,12 +245,19 @@ export default {
       headers: [],
       items: [],
       abortSearch: null,
+      filters: {},
+      filtersDialogState: false,
     };
   },
   methods: {
+    hasSlot(slot) {
+      return !!this.$scopedSlots[slot];
+    },
     async getData() {
       this.isLoading = true;
       const { sortBy, sortDesc, page, itemsPerPage } = this.options;
+
+      const filtersTemp = this.filters;
 
       this.abortSearch = new AbortController();
 
@@ -222,7 +274,22 @@ export default {
           }
         }
 
-        return qs + sortString;
+        let filterString = "&";
+
+        if (filtersTemp) {
+          for (const key in filtersTemp) {
+            const element = filtersTemp[key];
+            if (Array.isArray(element)) {
+              element.forEach((item) => {
+                filterString += `${key}[$in][]=${item}&`;
+              });
+            } else {
+              if (element) filterString += `${key}=${element}&`;
+            }
+          }
+        }
+
+        return qs + sortString + filterString;
       }
 
       let query = {
@@ -296,6 +363,12 @@ export default {
       download_link.style.display = "none";
       document.body.appendChild(download_link);
       download_link.click();
+    },
+    showFiltersDialog() {
+      this.filtersDialogState = true;
+    },
+    closeFiltersDialog() {
+      this.filtersDialogState = false;
     },
     showCrudDialog(e) {
       if (e) this.item = e;
