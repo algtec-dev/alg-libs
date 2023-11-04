@@ -148,6 +148,7 @@
       :data="item"
       :headers="data"
       :route="route"
+      :dialogWidth="dialogWidth"
       @close-dialog="closeCrudDialog"
       @close-get-data="closeGetData"
     >
@@ -186,6 +187,14 @@ export default {
   props: {
     route: String,
     data: Array,
+    customQuery: {
+      default: "",
+      type: String,
+    },
+    dialogWidth: {
+      default: 800,
+      type: Number,
+    },
   },
   async created() {
     // popula o header da tabela
@@ -259,6 +268,8 @@ export default {
 
       const filtersTemp = this.filters;
 
+      const userQuery = this.customQuery;
+
       this.abortSearch = new AbortController();
 
       function serialize(params) {
@@ -289,7 +300,7 @@ export default {
           }
         }
 
-        return qs + sortString + filterString;
+        return qs + sortString + filterString + userQuery;
       }
 
       let query = {

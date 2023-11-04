@@ -3,7 +3,7 @@
     v-model="crudDialogState"
     @click:outside="closeDialog"
     @keydown.esc="closeDialog"
-    max-width="800"
+    :max-width="dialogWidth"
     :fullscreen="$vuetify.breakpoint.xsOnly"
   >
     <v-card class="flexcard">
@@ -239,6 +239,10 @@ export default {
     data: Object,
     headers: Array,
     route: String,
+    dialogWidth: {
+      default: 800,
+      type: Number,
+    },
   },
   components: {
     DatePicker,
@@ -401,7 +405,8 @@ export default {
           .delete(this.route + "/" + this.item._id)
           .catch(function (error) {
             console.log(error);
-            if(error.response.data.code === 422) duplicate = error.response.data.message;
+            if (error.response.data.code === 422)
+              duplicate = error.response.data.message;
             errors = true;
           });
 
@@ -410,12 +415,11 @@ export default {
 
           this.closeDialog(true);
         } else {
-          if(duplicate != 'Conflito')           
+          if (duplicate != "Conflito")
             this.$root.notify.showErrorToast(duplicate);
-          else
-            this.$root.notify.showErrorToast("Erro ao excluir");
-          
-            this.isLoading = false;
+          else this.$root.notify.showErrorToast("Erro ao excluir");
+
+          this.isLoading = false;
         }
       } else {
         this.isLoading = false;
