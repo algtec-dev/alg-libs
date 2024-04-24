@@ -191,6 +191,9 @@ export default {
       default: "",
       type: String,
     },
+    customParams: {
+      type: Object,
+    },
     dialogWidth: {
       default: 800,
       type: Number,
@@ -307,6 +310,7 @@ export default {
         params: {
           $limit: itemsPerPage,
           $skip: (page - 1) * itemsPerPage,
+          ...this.customParams
         },
       };
 
