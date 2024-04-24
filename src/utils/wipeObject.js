@@ -50,16 +50,13 @@ export default function wipeObject(o) {
 }
 
 function isEmpty(obj) {
-    if (
+    const stringify = JSON.stringify(obj) 
+    return (
         obj === "" ||
         obj === null ||
-        JSON.stringify(obj) === "{}" ||
-        JSON.stringify(obj) === "[]" ||
         obj === undefined ||
-        obj === {}
-    ) {
-        return true;
-    } else {
-        return false;
-    }
+        stringify === "{}" ||
+        stringify === "[]" ||
+        (typeof obj === 'object' && Object.keys(obj).length === 0)
+    ) 
 }
