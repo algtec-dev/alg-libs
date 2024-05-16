@@ -11,6 +11,7 @@ import { VueMaskDirective } from "v-mask";
 import mask from "./src/utils/mask.js";
 import rules from "./src/utils/rules.js";
 import utils from "./src/utils/utils.js";
+import lists from "./src/utils/lists.js";
 
 function install(Vue, options = {}) {
   // testes de props
@@ -44,6 +45,7 @@ function install(Vue, options = {}) {
     mask,
     rules,
     utils,
+    lists,
   };
 
   Vue.component("AlgCrud", AlgCrud);
