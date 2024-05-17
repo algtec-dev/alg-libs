@@ -50,4 +50,4 @@ const escolaridade = [
   "Sem Instrução",
 ];
 
-export { estados, estado_civil, escolaridade };
+export default { estados, estado_civil, escolaridade };
