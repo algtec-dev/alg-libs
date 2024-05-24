@@ -32,7 +32,7 @@
 import http from "@/plugins/axios.js";
 
 export default {
-  props: ["value", "url", "listShowValues"],
+  props: ["value", "url", "listShowValues", "params"],
   created() {
     if (this.value) this.getInitial();
     this.model = this.value;
@@ -83,6 +83,10 @@ export default {
       let query = {
         params: {},
       };
+
+      if (this.params) {
+        query.params = this.params;
+      }
 
       if (this.search) {
         // console.log("search", this.search);
