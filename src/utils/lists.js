@@ -34,9 +34,12 @@ const estado_civil = [
   "Divorciado(a)",
   "Viúvo(a)",
   "Separado(a)",
+  "União Estável",
 ];
 
 const escolaridade = [
+  "Outro",
+  "Sem Instrução",
   "Fundamental Incompleto",
   "Fundamental Completo",
   "Médio Incompleto",
@@ -46,8 +49,6 @@ const escolaridade = [
   "Pós Graduação",
   "Mestrado",
   "Doutorado",
-  "Outro",
-  "Sem Instrução",
 ];
 
 export default { estados, estado_civil, escolaridade };
