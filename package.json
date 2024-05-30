@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
     "qs": "^6.12.1",
     "v-mask": "^2.3.0"
   }

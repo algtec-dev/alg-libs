@@ -3,7 +3,7 @@
     <v-card flat outlined>
       <!-- toolbar -->
       <v-row no-gutters id="table-options" class="text-right">
-        <v-col cols="12" md="4" class="text-left">
+        <v-col cols="12" md="auto" class="text-left">
           <v-container class="py-2 font-weight-bold text-uppercase" fill-height>
             <v-icon dense left>
               {{ $router.currentRoute.meta.icon }}
@@ -12,7 +12,8 @@
             {{ $router.currentRoute.name }}
           </v-container>
         </v-col>
-        <v-col cols="12" md="3" class="col-border">
+        <v-spacer></v-spacer>
+        <v-col cols="12" md="4" class="col-border">
           <v-divider class="hidden-md-and-up"></v-divider>
           <v-text-field
             placeholder="Pesquisar"
@@ -27,7 +28,7 @@
           <v-divider class="hidden-md-and-up"></v-divider>
         </v-col>
         <!-- action button -->
-        <v-col cols="12" md="5">
+        <v-col cols="12" md="auto">
           <v-item-group class="text-center text-md-right">
             <v-btn
               v-if="hasSlot('filters')"
@@ -48,7 +49,19 @@
               </v-badge>
             </v-btn>
 
-            <v-btn tile depressed height="40" @click="exportItems()">
+            <v-btn
+              v-if="reportsFields"
+              tile
+              color="info"
+              depressed
+              height="40"
+              @click="reportsDialogState = true"
+            >
+              <v-icon dense left>mdi-note-text</v-icon>
+              <span class="caption">Relatórios</span>
+            </v-btn>
+
+            <v-btn v-else tile depressed height="40" @click="exportItems()">
               <v-icon dense left> mdi-printer </v-icon>
               <span class="caption">Exportar</span>
             </v-btn>
@@ -169,6 +182,14 @@
         <slot name="filters" v-bind:data="props"> </slot>
       </template>
     </FiltersDialog>
+    <ReportsDialog
+      v-if="reportsDialogState"
+      v-model="reportsFields"
+      :dialogState="reportsDialogState"
+      :query="mountedQuery"
+      :url="route"
+      @close-dialog="reportsDialogState = false"
+    />
   </v-container>
 </template>
 
@@ -178,20 +199,19 @@ import FiltersDialog from "./components/filters_dialog.vue";
 
 import http from "@/plugins/axios.js";
 import qs from "qs";
+import ReportsDialog from "./components/ReportsDialog.vue";
 
 export default {
   name: "AlgCrud",
   components: {
     CrudDialog,
     FiltersDialog,
+    ReportsDialog,
   },
   props: {
     route: String,
     data: Array,
-    customQuery: {
-      default: "",
-      type: String,
-    },
+    reportsFields: Array,
     customParams: {
       type: Object,
     },
@@ -260,6 +280,8 @@ export default {
       abortSearch: null,
       filters: {},
       filtersDialogState: false,
+      reportsDialogState: false,
+      mountedQuery: {},
     };
   },
   methods: {
@@ -300,6 +322,8 @@ export default {
           }
         }
       }
+
+      this.mountedQuery = query;
 
       try {
         const response = await http.get(this.route, {
