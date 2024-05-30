@@ -177,6 +177,7 @@ import CrudDialog from "./components/crud_dialog.vue";
 import FiltersDialog from "./components/filters_dialog.vue";
 
 import http from "@/plugins/axios.js";
+import qs from "qs";
 
 export default {
   name: "AlgCrud",
@@ -268,72 +269,55 @@ export default {
     async getData() {
       this.isLoading = true;
       const { sortBy, sortDesc, page, itemsPerPage } = this.options;
-
-      const filtersTemp = this.filters;
-
-      const userQuery = this.customQuery;
-
       this.abortSearch = new AbortController();
 
-      function serialize(params) {
-        const qs = Object.keys(params)
-          .map((key) => `${key}=${params[key]}`)
-          .join("&");
-
-        let sortString = "&";
-
-        if (sortBy.length > 0) {
-          for (const key in sortBy) {
-            sortString += `$sort[${sortBy[key]}]=${sortDesc[key] ? -1 : 1}&`;
-          }
-        }
-
-        let filterString = "&";
-
-        if (filtersTemp) {
-          for (const key in filtersTemp) {
-            const element = filtersTemp[key];
-            if (Array.isArray(element)) {
-              element.forEach((item) => {
-                filterString += `${key}[$in][]=${item}&`;
-              });
-            } else {
-              if (element) filterString += `${key}=${element}&`;
-            }
-          }
-        }
-
-        return qs + sortString + filterString + userQuery;
-      }
-
       let query = {
-        params: {
-          $limit: itemsPerPage,
-          $skip: (page - 1) * itemsPerPage,
-          ...this.customParams
-        },
+        $limit: itemsPerPage,
+        $skip: (page - 1) * itemsPerPage,
+        ...this.customParams,
       };
 
       if (this.busca) {
-        query.params.$search = this.busca;
+        query.$search = this.busca;
+      }
+
+      // Adicionar sort
+      if (sortBy.length > 0) {
+        query.$sort = {};
+        for (let i = 0; i < sortBy.length; i++) {
+          query.$sort[sortBy[i]] = sortDesc[i] ? -1 : 1;
+        }
+      }
+
+      // Adicionar filtros se houverem
+      if (Object.keys(this.filters).length > 0) {
+        for (const key in this.filters) {
+          const element = this.filters[key];
+          if (Array.isArray(element)) {
+            query[key] = { $in: element };
+          } else {
+            query[key] = element;
+          }
+        }
       }
 
       try {
-        var response = await http.get(this.route, {
-          params: query.params,
+        const response = await http.get(this.route, {
+          params: query,
           signal: this.abortSearch.signal,
-
           paramsSerializer: (params) => {
-            return serialize(params);
+            return qs.stringify(params, {
+              arrayFormat: "brackets",
+              encode: false,
+            });
           },
         });
-        // console.log(decodeURI(response.request.responseURL));
 
         this.totalItens = response.data.total;
         this.items = response.data.data;
         this.isLoading = false;
       } catch (error) {
-        // console.log(error);
+        console.error(error);
       }
     },
     async exportItems() {
