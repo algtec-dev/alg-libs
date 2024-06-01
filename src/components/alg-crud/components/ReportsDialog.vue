@@ -108,13 +108,8 @@ export default {
     toQuery: {},
     form: {
       titulo: "Relatório",
-      exibicao: [
-        {
-          text: "Nome",
-          value: "name",
-        },
-      ],
-      tipo: "csv",
+      exibicao: [],
+      // tipo: "csv",
     },
     data: [],
   }),
