@@ -9,7 +9,6 @@
     placeholder="Pesquisar"
     @change="$emit('input', model)"
     no-filter
-    cache-items
   >
     <!-- <template v-if="listShowValues" v-slot:selection="data">
       <div v-for="(k, i) in listShowValues" :key="i">
