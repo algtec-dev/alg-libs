@@ -55,22 +55,26 @@ function isValidDate(dateString) {
 function getDottedObjectValue(obj, prop) {
   var parts = prop.split('.');
 
+  if (parts.length == 1) {
+    return obj[prop];
+  }
+
   if (Array.isArray(parts)) {
-      var last = parts.pop(),
+    var last = parts.pop(),
       l = parts.length,
       i = 1,
       current = parts[0];
 
-      while((obj = obj[current]) && i < l) {
-          current = parts[i];
-          i++;
-      }
+    while ((obj = obj[current]) && i < l) {
+      current = parts[i];
+      i++;
+    }
 
-      if(obj) {
-          return obj[last];
-      }
+    if (obj) {
+      return obj[last];
+    }
   } else {
-      throw 'parts is not valid array';
+    throw 'parts is not valid array';
   }
 }
 

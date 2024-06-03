@@ -87,6 +87,7 @@ import http from "@/plugins/axios.js";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import qs from "qs";
+import utils from "../../../utils/utils.js";
 
 export default {
   props: {
@@ -109,7 +110,7 @@ export default {
     form: {
       titulo: "Relatório",
       exibicao: [],
-      // tipo: "csv",
+      tipo: "csv",
     },
     data: [],
   }),
@@ -150,7 +151,18 @@ export default {
     },
     async pdf() {
       try {
-        var data = this.data;
+        var cols = this.form.exibicao.map((el) => {
+          return { header: el.text, dataKey: el.value };
+        });
+
+        var data = this.data.map((el) => {
+          let obj = {};
+          for (const iterator of cols) {
+            let value = utils.getDottedObjectValue(el, iterator.dataKey);
+            obj[iterator.dataKey] = value;
+          }
+          return obj;
+        });
 
         const doc = new jsPDF(this.form.orientacao);
 
@@ -165,9 +177,7 @@ export default {
           startY: 28,
           // headStyles: { fillColor: [155, 89, 182] }, // Purple
           body: data,
-          columns: this.form.exibicao.map((el) => {
-            return { header: el.text, dataKey: el.value };
-          }),
+          columns: cols,
         });
 
         doc.output("dataurlnewwindow", `${this.form.titulo}.pdf`);
@@ -185,7 +195,8 @@ export default {
         data.forEach((item) => {
           let temp = {};
           this.form.exibicao.forEach((element) => {
-            temp[element.text] = item[element.value] ?? "";
+            temp[element.text] =
+              utils.getDottedObjectValue(item, element.value) ?? "";
           });
           toExport.push(temp);
         });
