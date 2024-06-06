@@ -115,8 +115,16 @@ export default {
       });
       return ret;
     },
+    item() {
+      return this.$store.getters["notifications/message"];
+    },
   },
   watch: {
+    item: {
+      handler(value) {
+        this.objects.push(value);
+      },
+    },
     messages() {
       this.eventify(this.messages);
     },
