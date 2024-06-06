@@ -130,6 +130,14 @@ export default {
     async getData() {
       let temp = [];
 
+      let hasEndereco = this.form.exibicao.some(
+        (item) => item["value"] === "user.address"
+      );
+
+      if (hasEndereco && this.toQuery.$populate) {
+        this.toQuery.$populate.push(["address", "streetName", "neighborhood"]);
+      }
+
       try {
         const response = await http.get(this.url, {
           params: this.toQuery,
@@ -179,8 +187,8 @@ export default {
           body: data,
           columns: cols,
         });
-
-        doc.output("dataurlnewwindow", `${this.form.titulo}.pdf`);
+        const pdfUrl = doc.output("bloburl");
+        window.open(pdfUrl, "_blank");
       } catch (error) {
         console.log(error);
         // this.showError();
