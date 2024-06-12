@@ -58,6 +58,13 @@ function cpfRule(text) {
   };
 }
 
+function tituloEleitorRule(text) {
+  return (value) => {
+    if (!value) return true;
+    return utils.validarTituloEleitor(value) || (text ?? "Título Inválido");
+  };
+}
+
 function emailRule(text) {
   const regex =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -124,4 +131,5 @@ export default {
   brDateRule,
   minBrDateRule,
   maxBrDateRule,
+  tituloEleitorRule
 };

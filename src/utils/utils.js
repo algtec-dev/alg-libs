@@ -40,6 +40,36 @@ function validaCpf(c) {
   return checkAll(prepare(c));
 }
 
+function validarTituloEleitor(titulo) {
+  // Remove caracteres não numéricos (inclui espaços vazios)
+  titulo = titulo.replace(/\D/g, '');
+
+  // Verifica se tem exatamente 12 dígitos
+  if (titulo.length !== 12) return false;
+
+  // Verifica se todos os dígitos não são iguais
+  if (/^(\d)\1*$/.test(titulo)) return false;
+
+  const digitos = titulo.split('').map(Number);
+
+  // Função para calcular os dígitos verificadores
+  const calcDigito = (limite) => {
+    let soma = 0;
+    for (let i = 0; i < limite; i++) {
+      soma += digitos[i] * (limite + 1 - i);
+    }
+    const resto = 11 - (soma % 11);
+    return resto >= 10 ? 0 : resto;
+  };
+
+  // Calcula os dois dígitos verificadores
+  const digito10 = calcDigito(8);
+  const digito11 = calcDigito(11);
+
+  // Verifica se os dígitos verificadores estão corretos
+  return digitos[10] === digito10 && digitos[11] === digito11;
+}
+
 function isValidDate(dateString) {
   var regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   if (!regex.test(dateString)) return false;
@@ -76,5 +106,6 @@ export default {
   getOnlyDate,
   validaCpf,
   isValidDate,
-  getDottedObjectValue
+  getDottedObjectValue,
+  validarTituloEleitor
 };
