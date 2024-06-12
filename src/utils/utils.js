@@ -52,19 +52,29 @@ function validarTituloEleitor(titulo) {
 
   const digitos = titulo.split('').map(Number);
 
-  // Função para calcular os dígitos verificadores
-  const calcDigito = (limite) => {
+  // Função para calcular o primeiro dígito verificador
+  const calcPrimeiroDigito = () => {
     let soma = 0;
-    for (let i = 0; i < limite; i++) {
-      soma += digitos[i] * (limite + 1 - i);
+    for (let i = 0; i < 8; i++) {
+      soma += digitos[i] * (9 - i);
     }
-    const resto = 11 - (soma % 11);
-    return resto >= 10 ? 0 : resto;
+    const resto = soma % 11;
+    return resto === 0 || resto === 1 ? 0 : 11 - resto;
+  };
+
+  // Função para calcular o segundo dígito verificador
+  const calcSegundoDigito = () => {
+    let soma = 0;
+    for (let i = 0; i < 11; i++) {
+      soma += digitos[i] * (10 - i);
+    }
+    const resto = soma % 11;
+    return resto === 0 || resto === 1 ? 0 : 11 - resto;
   };
 
   // Calcula os dois dígitos verificadores
-  const digito10 = calcDigito(8);
-  const digito11 = calcDigito(11);
+  const digito10 = calcPrimeiroDigito();
+  const digito11 = calcSegundoDigito();
 
   // Verifica se os dígitos verificadores estão corretos
   return digitos[10] === digito10 && digitos[11] === digito11;
