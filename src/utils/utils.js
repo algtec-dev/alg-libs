@@ -50,34 +50,18 @@ function validarTituloEleitor(titulo) {
   // Verifica se todos os dígitos não são iguais
   if (/^(\d)\1*$/.test(titulo)) return false;
 
-  const digitos = titulo.split('').map(Number);
+  var e = 0,
+    t = 0,
+    a = titulo.length,
+    d = titulo.substr(a - 2, 2),
+    c = titulo.substr(a - 4, 2),
+    titulo = titulo.substr(0, a - 2),
+    a = "01" == c || "02" == c,
+    c = (e = 9 * (titulo.charCodeAt(0) - 48) + 8 * (titulo.charCodeAt(1) - 48) + 7 * (titulo.charCodeAt(2) - 48) + 6 * (titulo.charCodeAt(3) - 48) + 5 * (titulo.charCodeAt(4) - 48) + 4 * (titulo.charCodeAt(5) - 48) + 3 * (titulo.charCodeAt(6) - 48) + 2 * (titulo.charCodeAt(7) - 48)) % 11;
 
-  // Função para calcular o primeiro dígito verificador
-  const calcPrimeiroDigito = () => {
-    let soma = 0;
-    for (let i = 0; i < 8; i++) {
-      soma += digitos[i] * (9 - i);
-    }
-    const resto = soma % 11;
-    return resto === 0 || resto === 1 ? 0 : 11 - resto;
-  };
-
-  // Função para calcular o segundo dígito verificador
-  const calcSegundoDigito = () => {
-    let soma = 0;
-    for (let i = 0; i < 11; i++) {
-      soma += digitos[i] * (10 - i);
-    }
-    const resto = soma % 11;
-    return resto === 0 || resto === 1 ? 0 : 11 - resto;
-  };
-
-  // Calcula os dois dígitos verificadores
-  const digito10 = calcPrimeiroDigito();
-  const digito11 = calcSegundoDigito();
-
-  // Verifica se os dígitos verificadores estão corretos
-  return digitos[10] === digito10 && digitos[11] === digito11;
+  return e = 0 == c ? a ? 1 : 0 : 1 == c ? 0 : 11 - c,
+    t = 0 == (c = (t = 4 * (titulo.charCodeAt(8) - 48) + 3 * (titulo.charCodeAt(9) - 48) + 2 * e) % 11) ? a ? 1 : 0 : 1 == c ? 0 : 11 - c,
+    d.charCodeAt(0) - 48 == e && d.charCodeAt(1) - 48 == t
 }
 
 function isValidDate(dateString) {
