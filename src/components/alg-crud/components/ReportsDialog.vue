@@ -131,7 +131,7 @@ export default {
       let temp = [];
 
       let hasEndereco = this.form.exibicao.some(
-        (item) => item["value"] === "user.address"
+        (item) => item["value"] === "person.address"
       );
 
       if (hasEndereco && this.toQuery.$populate) {

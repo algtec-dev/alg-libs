@@ -119,6 +119,7 @@
                   :readonly="isLoading || (data && !isEditing)"
                   validate-on-blur
                   :listShowValues="el.listShowValues"
+                  :params="el.params"
                 ></SearchInput>
                 <v-autocomplete
                   v-if="el.type == 'select'"
