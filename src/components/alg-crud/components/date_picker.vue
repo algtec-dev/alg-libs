@@ -19,7 +19,7 @@
 
     <v-card>
       <v-row no-gutters justify="space-around">
-        <v-date-picker v-model="dateModel"></v-date-picker>
+        <v-date-picker locale="PT-br" v-model="dateModel"></v-date-picker>
         <v-time-picker
           v-if="!isOnlyDate"
           v-model="hourModel"
@@ -72,7 +72,9 @@ export default {
     },
   },
   data: () => ({
-    dateModel: new Date(timeNow).toISOString().substr(0, 10),
+    dateModel: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      .toISOString()
+      .substr(0, 10),
     hourModel: "00:00",
     inputValue: "",
     dialog: false,
@@ -80,7 +82,7 @@ export default {
   methods: {
     getPreviewDate() {
       if (this.isOnlyDate) return this.jsDateTime.toLocaleDateString();
-      else return this.jsDateTime.toLocaleString().substring(0, 16);
+      else return this.jsDateTime.toLocaleString().substring(0, 17);
     },
     getOutputDate() {
       if (this.dateType == "date") return this.jsDateTime.toLocaleDateString();
