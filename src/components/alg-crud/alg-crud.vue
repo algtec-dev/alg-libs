@@ -31,6 +31,18 @@
         <v-col cols="12" md="auto">
           <v-item-group class="text-center text-md-right">
             <v-btn
+              v-for="(item, i) in toolbarBtns"
+              :key="i"
+              tile
+              :color="item.color"
+              depressed
+              height="40"
+              @click="item.action"
+            >
+              <v-icon dense left>{{ item.icon }}</v-icon>
+              <span class="caption">{{ item.name }}</span>
+            </v-btn>
+            <v-btn
               v-if="hasSlot('filters')"
               tile
               color="secondary"
@@ -218,6 +230,10 @@ export default {
     dialogWidth: {
       default: 800,
       type: Number,
+    },
+    toolbarBtns: {
+      type: Array,
+      default: () => [],
     },
   },
   async created() {
